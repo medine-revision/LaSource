@@ -6,7 +6,7 @@
 <title>La Source asbl — Révision Médine Tome 1</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%2317223a%22/%3E%3Cpath%20d%3D%22M40%2010a22%2022%200%201%201-26%2030%22%20fill%3D%22none%22%20stroke%3D%22%234fa6ee%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%3Ctext%20x%3D%2230%22%20y%3D%2242%22%20text-anchor%3D%22middle%22%20font-family%3D%22Georgia%2Cserif%22%20font-size%3D%2224%22%20fill%3D%22%23fff%22%3ELS%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Readex+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600&family=Readex+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 /* VOICE: calme, studieux, encourageant — un carnet de cours qu'on ouvre chaque soir
    IDEA: la tablette d'étude (lawḥ) posée sur un carrelage de Médine
@@ -22,7 +22,7 @@
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Readex Pro",system-ui,sans-serif;overflow-x:clip;padding-bottom:env(safe-area-inset-bottom)}
 button,input,select{font:inherit;color:inherit}
-.ar{font-family:Amiri,"Noto Naskh Arabic","Traditional Arabic",serif;direction:rtl;unicode-bidi:isolate}
+.ar{font-family:"Noto Naskh Arabic","Traditional Arabic","Times New Roman",serif;direction:rtl;unicode-bidi:isolate}
 header{background:radial-gradient(120% 140% at 100% 0%,#2f6fc0 0%,transparent 55%),radial-gradient(90% 120% at 0% 100%,#22396d 0%,transparent 60%),linear-gradient(135deg,#121a2e 0%,#17223a 45%,#1d3563 100%);color:#fff;position:relative;overflow:hidden}
 header .in{max-width:760px;margin:auto;padding:18px 16px 0;position:relative}
 header svg.pat{position:absolute;inset:0;width:100%;height:100%;opacity:.09}
@@ -94,7 +94,7 @@ select:focus-visible,input:focus-visible,button:focus-visible{outline:3px solid 
 .opt.bad{border-color:var(--bad);background:var(--badbg)}
 .ans{margin-top:16px;display:flex;gap:8px}
 .ans input{flex:1;font-size:18px}
-.ans input.ar{font-size:26px;font-family:Amiri,serif}
+.ans input.ar{font-size:26px;font-family:"Noto Naskh Arabic",serif}
 .btn{min-height:48px;padding:8px 18px;border-radius:12px;border:0;background:var(--tile);color:var(--card);font-weight:600;cursor:pointer}
 .btn.ghost{background:transparent;color:var(--tile);border:1px solid var(--line)}
 .kbbar{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}
@@ -102,7 +102,7 @@ select:focus-visible,input:focus-visible,button:focus-visible{outline:3px solid 
 .kbbar input{width:18px;height:18px;accent-color:var(--tile)}
 .kb{margin-top:10px;display:grid;gap:5px;user-select:none;-webkit-user-select:none}
 .kb .r{display:grid;gap:4px}
-.kb button{min-height:44px;border-radius:9px;border:1px solid var(--line);background:var(--bg);font-family:Amiri,serif;font-size:22px;cursor:pointer;padding:0;line-height:1;touch-action:manipulation}
+.kb button{min-height:44px;border-radius:9px;border:1px solid var(--line);background:var(--bg);font-family:"Noto Naskh Arabic",serif;font-size:22px;cursor:pointer;padding:0;line-height:1;touch-action:manipulation}
 .kb button:active{background:var(--tile2)}
 .kb .fn{font-family:"Readex Pro";font-size:13px}
 .kb .hk{font-size:22px;color:var(--mut)}
@@ -141,7 +141,7 @@ table.v{width:100%;border-collapse:collapse;margin-top:6px}
 table.v td{border-top:1px solid var(--line);padding:6px 4px;vertical-align:middle}
 table.v td.ar{font-size:22px;text-align:right;width:45%;cursor:pointer}
 table.cj{border-collapse:collapse;margin:6px 0;direction:rtl;width:100%}
-table.cj td{border:1px solid var(--line);padding:4px 8px;font-family:Amiri,serif;font-size:19px;text-align:center}
+table.cj td{border:1px solid var(--line);padding:4px 8px;font-family:"Noto Naskh Arabic",serif;font-size:19px;text-align:center}
 .sub{font-weight:700;margin:16px 0 4px;font-size:15px}
 .muted{color:var(--mut);font-size:13px}
 .note{font-size:13px;color:var(--mut);margin:8px 0 0}
@@ -163,6 +163,13 @@ details.sec>.in{padding-bottom:12px}
 .lesgo{margin-top:12px;width:100%}
 @media(max-width:420px){.top>.ar{display:none}.top h1{font-size:20px}.kb button{font-size:20px;min-height:42px}.kb .r{gap:3px}.opts.six{grid-template-columns:minmax(0,1fr)}}
 @media(prefers-reduced-motion:reduce){.bar i{transition:none}}
+.ar{line-height:1.9}
+.opt.ar{font-size:24px;padding-block:6px}
+.opt.ar .ot{line-height:2;padding-block:.12em;font-weight:500}
+.prompt.ar{line-height:1.9;font-weight:500}
+.t.ar{line-height:1.9;font-weight:500}
+.fb .sol.ar,.err .ar,table.v td.ar,.exl .ar,.mw .ar{line-height:2}
+
 .opt .ot{flex:1;min-width:0;white-space:nowrap;overflow:hidden;overflow-wrap:anywhere;line-height:1.3}
 .opt.ar .ot{text-align:right}
 
@@ -1702,7 +1709,7 @@ function start(P,list){
 function rec(it,ok){if(it.gen)return;const st=STATS();const s=st[it.id]||{r:0,w:0};ok?s.r++:s.w++;st[it.id]=s}
 function fitOpts(){
  app.querySelectorAll('.opt .ot').forEach(el=>{el.style.fontSize='';el.style.whiteSpace='nowrap';
-  let fs=parseFloat(getComputedStyle(el).fontSize);const min=el.closest('.opt').classList.contains('ar')?18:14;
+  let fs=parseFloat(getComputedStyle(el).fontSize);const min=el.closest('.opt').classList.contains('ar')?21:14;
   while(el.scrollWidth>el.clientWidth+1&&fs>min){fs-=1;el.style.fontSize=fs+'px'}
   if(el.scrollWidth>el.clientWidth+1)el.style.whiteSpace='normal'});
 }
