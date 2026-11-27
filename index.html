@@ -6,7 +6,7 @@
 <title>La Source asbl — Révision Médine Tome 1</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%2317223a%22/%3E%3Cpath%20d%3D%22M40%2010a22%2022%200%201%201-26%2030%22%20fill%3D%22none%22%20stroke%3D%22%234fa6ee%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%3Ctext%20x%3D%2230%22%20y%3D%2242%22%20text-anchor%3D%22middle%22%20font-family%3D%22Georgia%2Cserif%22%20font-size%3D%2224%22%20fill%3D%22%23fff%22%3ELS%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600&family=Readex+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600&family=Scheherazade+New:wght@400;500&family=Readex+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 /* VOICE: calme, studieux, encourageant — un carnet de cours qu'on ouvre chaque soir
    IDEA: la tablette d'étude (lawḥ) posée sur un carrelage de Médine
@@ -22,7 +22,7 @@
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Readex Pro",system-ui,sans-serif;overflow-x:clip;padding-bottom:env(safe-area-inset-bottom)}
 button,input,select{font:inherit;color:inherit}
-.ar{font-family:"Noto Naskh Arabic","Traditional Arabic","Times New Roman",serif;direction:rtl;unicode-bidi:isolate}
+.ar{font-family:"Noto Naskh Arabic","Scheherazade New","Segoe UI","Arial",sans-serif;direction:rtl;unicode-bidi:isolate}
 header{background:radial-gradient(120% 140% at 100% 0%,#2f6fc0 0%,transparent 55%),radial-gradient(90% 120% at 0% 100%,#22396d 0%,transparent 60%),linear-gradient(135deg,#121a2e 0%,#17223a 45%,#1d3563 100%);color:#fff;position:relative;overflow:hidden}
 header .in{max-width:760px;margin:auto;padding:18px 16px 0;position:relative}
 header svg.pat{position:absolute;inset:0;width:100%;height:100%;opacity:.09}
@@ -164,9 +164,10 @@ details.sec>.in{padding-bottom:12px}
 @media(max-width:420px){.top>.ar{display:none}.top h1{font-size:20px}.kb button{font-size:20px;min-height:42px}.kb .r{gap:3px}.opts.six{grid-template-columns:minmax(0,1fr)}}
 @media(prefers-reduced-motion:reduce){.bar i{transition:none}}
 .ar{line-height:1.9}
-.opt.ar{font-size:24px;padding-block:6px}
+.opt.ar{font-size:27px;padding-block:6px}
 .opt.ar .ot{line-height:2;padding-block:.12em;font-weight:500}
 .prompt.ar{line-height:1.9;font-weight:500}
+.ar{font-size-adjust:none}
 .t.ar{line-height:1.9;font-weight:500}
 .fb .sol.ar,.err .ar,table.v td.ar,.exl .ar,.mw .ar{line-height:2}
 
@@ -297,7 +298,7 @@ details.les.mine{border-color:var(--tile)}
 </div>
 </header>
 <main id="app"></main>
-<footer><b>La Source asbl</b> — Science en pratique<br>Cours d'arabe et de sciences islamiques · 225 Chaussée de Jette, 1080 Bruxelles<br><a href="https://www.science-pratique.be/fr" target="_blank" rel="noopener">www.science-pratique.be</a> · info@science-pratique.be</footer>
+<footer><b>La Source asbl</b> — Science en pratique<br>Cours d'arabe et de sciences islamiques · 225 Chaussée de Jette, 1080 Bruxelles<br><a href="https://www.science-pratique.be/fr" target="_blank" rel="noopener">www.science-pratique.be</a> · info@science-pratique.be<br><span style="opacity:.6;font-size:12px">Version 27/11 · 14h</span></footer>
 <script>
 const D=[
 {n:1,p:6,t:"Ceci — هٰذا, ما, مَنْ, أَ",
@@ -1709,7 +1710,7 @@ function start(P,list){
 function rec(it,ok){if(it.gen)return;const st=STATS();const s=st[it.id]||{r:0,w:0};ok?s.r++:s.w++;st[it.id]=s}
 function fitOpts(){
  app.querySelectorAll('.opt .ot').forEach(el=>{el.style.fontSize='';el.style.whiteSpace='nowrap';
-  let fs=parseFloat(getComputedStyle(el).fontSize);const min=el.closest('.opt').classList.contains('ar')?21:14;
+  let fs=parseFloat(getComputedStyle(el).fontSize);const min=el.closest('.opt').classList.contains('ar')?23:14;
   while(el.scrollWidth>el.clientWidth+1&&fs>min){fs-=1;el.style.fontSize=fs+'px'}
   if(el.scrollWidth>el.clientWidth+1)el.style.whiteSpace='normal'});
 }
