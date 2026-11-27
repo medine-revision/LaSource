@@ -144,6 +144,22 @@ table.cj td{border:1px solid var(--line);padding:4px 8px;font-family:Amiri,serif
 .sub{font-weight:700;margin:16px 0 4px;font-size:15px}
 .muted{color:var(--mut);font-size:13px}
 .note{font-size:13px;color:var(--mut);margin:8px 0 0}
+.noar .say,.noar .sayhint{display:none}.noar [data-say]{cursor:auto}
+details.sec{border-top:1px solid var(--line)}
+details.sec>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;min-height:52px;font-weight:700;font-size:16px}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary .c{margin-inline-start:auto;width:28px;height:28px;border-radius:8px;background:var(--tile2);display:grid;place-items:center;transition:transform .2s;flex:none}
+details.sec[open]>summary .c,details.les[open]>summary .c{transform:rotate(180deg)}
+details.les>summary .c{margin-inline-start:auto;width:28px;height:28px;display:grid;place-items:center;transition:transform .2s;flex:none;color:var(--mut)}
+details.sec>summary small{font-weight:400;color:var(--mut);font-size:13px}
+details.sec>.in{padding-bottom:12px}
+.res{background:var(--tile2);border-radius:14px;padding:12px 14px;margin-bottom:12px}
+.res h3{margin:0 0 4px;font-size:15px}
+.res p{margin:0 0 6px}
+.res ul{margin:0;padding-inline-start:20px}
+.res li{margin:2px 0}
+.res .ar{font-size:1.2em}
+.lesgo{margin-top:12px;width:100%}
 @media(max-width:420px){.top>.ar{display:none}.top h1{font-size:20px}.kb button{font-size:20px;min-height:42px}.kb .r{gap:3px}.opts.six{grid-template-columns:minmax(0,1fr)}}
 @media(prefers-reduced-motion:reduce){.bar i{transition:none}}
 </style>
@@ -1142,6 +1158,30 @@ q:[["« Il est allé à La Mecque »","ذَهَبَ إِلىٰ مَكَّةَ.",
 ["« Je suis du Pakistan »","أَنا مِنْ باكِسْتانَ.","أَنا مِنْ باكِسْتانِ.","أَنا مِنْ باكِسْتانٍ.","أَنا مِنْ باكِسْتانُ.","Nom étranger en ـانُ → diptote."],
 ["« pour Ahmad »","لِأَحْمَدَ","لِأَحْمَدِ","لِأَحْمَدٍ","لِلْأَحْمَدِ","أَحْمَدُ (schème أَفْعَلُ) est diptote."]]}
 ];
+const SUM={
+1:"On apprend à désigner des objets et des personnes proches et à poser les premières questions.|هٰذا = ceci / c'est (masculin, proche)|ما ؟ pour les choses, مَنْ ؟ pour les personnes, أَ pour oui / non|Le tanwīn (ـٌ) marque l'indéfini : كِتابٌ = un livre",
+2:"On ajoute le démonstratif pour ce qui est éloigné.|ذٰلِكَ = cela (masculin, loin)|هٰذا (proche) ≠ ذٰلِكَ (loin)",
+3:"On découvre l'article ال et la première vraie phrase : « le livre est neuf ».|ال = le / la / les, et le tanwīn disparaît|Sujet défini + attribut indéfini = « X est Y »|Lettres solaires (الشَّمْسُ) et lunaires (القَمَرُ)",
+4:"On situe les choses (dans, sur, de, vers) et on voit les premiers verbes au passé.|Après في، عَلىٰ، مِنْ، إِلىٰ : génitif (ـِ)|هُوَ / هِيَ = il / elle|ذَهَبَ، خَرَجَ = il est allé, il est sorti",
+5:"On exprime l'appartenance : « le livre de Mohammed ».|Iḍāfa : كِتابُ مُحَمَّدٍ|1er nom sans ال ni tanwīn, 2e nom au génitif|يا pour appeler quelqu'un",
+6:"On découvre le féminin et le démonstratif هٰذِهِ.|ة marque le plus souvent le féminin|هٰذِهِ = ceci (féminin, proche)|Féminins sans ة : أُمٌّ، عَيْنٌ، يَدٌ…",
+7:"On complète les démonstratifs avec le féminin éloigné.|تِلْكَ = cela (féminin, loin)|Les 4 démonstratifs : هٰذا، هٰذِهِ، ذٰلِكَ، تِلْكَ",
+8:"On dit « cet homme », « à qui ? » et on situe devant / derrière.|هٰذا الرَّجُلُ = cet homme (≠ هٰذا رَجُلٌ)|لِـ = à (appartenance) ; لِمَنْ ؟ = à qui ?|أَمامَ / خَلْفَ + génitif",
+9:"On décrit avec l'adjectif placé après le nom.|L'adjectif suit le nom et s'accorde avec lui|الطّالِبُ الجَدِيدُ (le nouvel étudiant) ≠ الطّالِبُ جَدِيدٌ (l'étudiant est nouveau)|الَّذِي = qui",
+10:"On parle de soi et des autres avec les possessifs : mon, ton, son.|ـِي، ـكَ، ـكِ، ـهُ، ـها|أَبُوكَ، أَخُوهُ|عِنْدِي / لِي = j'ai",
+11:"Texte de lecture : ma maison, ma chambre, ma famille.|فِيهِ / فِيها = il y a (dedans)|في + lieu + nom indéfini = « il y a … »|أُحِبُّ + complément à l'accusatif",
+12:"On salue, on parle de la famille et on conjugue au féminin.|Sujet féminin → verbe en تْ : ذَهَبَتْ|الَّتِي = qui (féminin)|عَمٌّ / عَمَّةٌ côté père, خالٌ / خالَةٌ côté mère",
+13:"On passe au pluriel des personnes.|Pluriels réguliers : ـُونَ (masc.) et ـاتٌ (fém.)|Pluriels brisés à apprendre : طُلّابٌ، رِجالٌ|هٰؤُلاءِ / أُولٰئِكَ ; ذَهَبُوا / ذَهَبْنَ",
+14:"On parle de « nous » et de « vous ».|نَحْنُ، أَنْتُمْ|ـنا، ـكُمْ، ـهُمْ|ذَهَبْنا، ذَهَبْتُمْ",
+15:"On termine les pronoms et la conjugaison complète du passé.|أَنْتِ، أَنْتُنَّ، هُنَّ|Toutes les personnes : ذَهَبْتُ … ذَهَبْنَ|قَبْلَ / بَعْدَ ; مَتىٰ = quand",
+16:"Le pluriel des choses et des animaux.|Pluriel non-humain = féminin singulier : هٰذِهِ كُتُبٌ|البُيُوتُ كَبِيرَةٌ",
+17:"Suite : adjectifs et démonstratifs avec les pluriels non-humains.|كُتُبٌ جَدِيدَةٌ|تِلْكَ pour les choses éloignées, أُولٰئِكَ pour les personnes|مَساجِدُ، مَفاتِيحُ : sans tanwīn",
+18:"On compte jusqu'à deux et on demande « combien ? ».|Duel : ـانِ (sujet) / ـَيْنِ|هٰذانِ / هاتانِ|كَمْ + singulier à l'accusatif : كَمْ أَخًا ؟",
+19:"Les nombres de 3 à 10 avec un nom masculin.|Nombre avec ة devant un nom masculin : ثَلاثَةُ طُلّابٍ|Le nom compté est au pluriel et au génitif",
+20:"Les nombres de 3 à 10 avec un nom féminin.|Nombre sans ة devant un nom féminin : ثَلاثُ طالِباتٍ|ثَمانِي (8) et عَشْرُ (10) au féminin",
+21:"Texte de révision : mon école et mes camarades.|لٰكِنَّ + accusatif|ذاكَ = ذٰلِكَ|Révision des nombres, du duel et des pluriels",
+22:"Les couleurs et les mots qui ne prennent jamais de tanwīn.|أَحْمَرُ / حَمْراءُ, أَسْوَدُ / سَوْداءُ…|Diptotes : noms propres féminins, schème أَفْعَلُ، noms étrangers, pluriels مَفاعِلُ…",
+23:"Les diptotes après une préposition.|مِنْ مَكَّةَ : fatha au lieu de kasra|Avec ال ou en iḍāfa, retour au kasra : في المَساجِدِ"};
 
 </script>
 <script>
@@ -1283,9 +1323,9 @@ applyTheme();
 const showAr=s=>S.har?s:stripH(s);
 const SPK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>';
 let arVoice=null;
-function loadVoices(){try{const v=speechSynthesis.getVoices();arVoice=v.find(x=>/^ar/i.test(x.lang))||null}catch(e){}}
-try{loadVoices();speechSynthesis.onvoiceschanged=loadVoices}catch(e){}
-function speak(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='ar-SA';if(arVoice)u.voice=arVoice;u.rate=.8;speechSynthesis.speak(u)}catch(e){}}
+function loadVoices(){try{const v=speechSynthesis.getVoices();arVoice=v.find(x=>/^ar/i.test(x.lang))||null}catch(e){arVoice=null}document.body.classList.toggle('noar',!arVoice)}
+document.body.classList.add('noar');try{loadVoices();speechSynthesis.onvoiceschanged=loadVoices}catch(e){}
+function speak(t){if(!arVoice)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='ar-SA';if(arVoice)u.voice=arVoice;u.rate=.8;speechSynthesis.speak(u)}catch(e){}}
 const sayBtn=t=>`<button class="say" type="button" data-say="${esc(t)}">${SPK}<span>Écouter</span></button>`;
 document.addEventListener('click',e=>{const b=e.target.closest('[data-say]');if(b)speak(b.dataset.say)});
 
@@ -1553,15 +1593,21 @@ function finish(){
 
 /* ---------- cours ---------- */
 function cours(){
- const Ls=D.filter(L=>L.n>=S.from&&L.n<=S.to);
- app.innerHTML=`<p class="muted" style="margin-top:0">Leçons ${S.from} à ${S.to} (modifiable dans « S'entraîner »). Touche un mot arabe pour l'entendre.</p>`+Ls.map((L,k)=>{
+ const Ls=D.filter(L=>L.n>=S.from&&L.n<=S.to);const CH='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg>';
+ app.innerHTML=`<p class="muted" style="margin-top:0">Leçons ${S.from} à ${S.to} (modifiable dans « S'entraîner »). Ouvre une leçon pour voir son résumé, sa grammaire et son vocabulaire.<span class="sayhint"> Touche un mot arabe pour l'entendre.</span></p>`+Ls.map(L=>{
   const W=ITEMS.filter(i=>i.L===L.n);const words=W.filter(i=>i.type==='w'),ph=W.filter(i=>i.type==='p'),fo=W.filter(i=>i.type==='f');
-  return `<details class="les" ${k===Ls.length-1?'open':''}><summary><span class="num">${L.n}</span><span><b>${esc(L.t)}</b><br><span class="muted">Page ${L.p} · ${words.length} mots · ${ph.length} phrases</span></span></summary><div class="body">
-  ${L.g.map(([t,d,ex])=>`<div class="rule"><h3>${esc(t)}</h3><p>${d}</p>${ex.map(([a,f])=>`<div class="exl"><span class="ar" data-say="${esc(stripH(a))}">${esc(showAr(a))}</span><span>${esc(f)}</span></div>`).join('')}</div>`).join('')}
-  ${words.length?`<div class="sub">Vocabulaire</div><table class="v">${words.map(w=>`<tr><td>${esc(w.fr.split('/').join(', '))}</td><td class="ar" data-say="${esc(stripH(w.ar))}">${esc(showAr(w.ar))}</td></tr>`).join('')}</table>`:''}
-  ${fo.length?`<div class="sub">Pluriels, duels et féminins</div><table class="v">${fo.map(w=>`<tr><td>${esc(w.fr)} <span class="muted">(${KIND[w.kind].toLowerCase()})</span></td><td class="ar" data-say="${esc(stripH(w.form))}">${esc(showAr(w.base))} ← ${esc(showAr(w.form))}</td></tr>`).join('')}</table>`:''}
-  ${ph.length?`<div class="sub">Phrases</div><table class="v">${ph.map(w=>`<tr><td>${esc(w.fr)}</td><td class="ar" data-say="${esc(stripH(w.ar))}">${esc(showAr(w.ar))}</td></tr>`).join('')}</table>`:''}
+  const [intro,...pts]=(SUM[L.n]||'').split('|');
+  return `<details class="les"><summary><span class="num">${L.n}</span><span><b>${esc(L.t)}</b><br><span class="muted">Page ${L.p} · ${words.length} mots · ${L.g.length} règle${L.g.length>1?'s':''}</span></span><span class="c">${CH}</span></summary><div class="body">
+  <div class="res"><h3>Résumé</h3><p>${esc(intro)}</p>${pts.length?`<ul>${pts.map(p=>`<li>${fmtPrompt(p)}</li>`).join('')}</ul>`:''}</div>
+  <details class="sec"><summary>1. Grammaire <small>${L.g.length} règle${L.g.length>1?'s':''}</small><span class="c">${CH}</span></summary><div class="in">
+  ${L.g.map(([t,d,ex])=>`<div class="rule"><h3>${esc(t)}</h3><p>${d}</p>${ex.map(([a,f])=>`<div class="exl"><span class="ar" data-say="${esc(stripH(a))}">${esc(showAr(a))}</span><span>${esc(f)}</span></div>`).join('')}</div>`).join('')}</div></details>
+  <details class="sec"><summary>2. Vocabulaire <small>${words.length} mots${fo.length?' · '+fo.length+' formes':''}</small><span class="c">${CH}</span></summary><div class="in">
+  ${words.length?`<table class="v">${words.map(w=>`<tr><td>${esc(w.fr.split('/').join(', '))}</td><td class="ar" data-say="${esc(stripH(w.ar))}">${esc(showAr(w.ar))}</td></tr>`).join('')}</table>`:''}
+  ${fo.length?`<div class="sub">Pluriels, duels et féminins</div><table class="v">${fo.map(w=>`<tr><td>${esc(w.fr)} <span class="muted">(${KIND[w.kind].toLowerCase()})</span></td><td class="ar" data-say="${esc(stripH(w.form))}">${esc(showAr(w.base))} ← ${esc(showAr(w.form))}</td></tr>`).join('')}</table>`:''}</div></details>
+  ${ph.length?`<details class="sec"><summary>3. Phrases d'exemple <small>${ph.length} phrases</small><span class="c">${CH}</span></summary><div class="in"><table class="v">${ph.map(w=>`<tr><td>${esc(w.fr)}</td><td class="ar" data-say="${esc(stripH(w.ar))}">${esc(showAr(w.ar))}</td></tr>`).join('')}</table></div></details>`:''}
+  <button class="btn lesgo" type="button" data-les="${L.n}">S'entraîner sur cette leçon</button>
   </div></details>`}).join('');
+ app.querySelectorAll('[data-les]').forEach(b=>b.onclick=()=>{const n=+b.dataset.les;S.from=n;S.to=Math.max(S.to,n);S.to=n;save();tab('train')});
 }
 
 /* ---------- démarrage ---------- */
