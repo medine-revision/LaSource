@@ -163,7 +163,9 @@ details.sec>.in{padding-bottom:12px}
 .lesgo{margin-top:12px;width:100%}
 @media(max-width:420px){.top>.ar{display:none}.top h1{font-size:20px}.kb button{font-size:20px;min-height:42px}.kb .r{gap:3px}.opts.six{grid-template-columns:minmax(0,1fr)}}
 @media(prefers-reduced-motion:reduce){.bar i{transition:none}}
-.stepper{display:grid;grid-template-columns:52px minmax(0,1fr) 52px;gap:8px}
+.stepper{display:grid;grid-template-columns:48px minmax(0,1fr) 48px auto;gap:8px}
+.stepper #pok{min-height:46px;padding:8px 16px;font-size:15px;color:#fff;background:var(--tile)}
+.stepper #pok:disabled{opacity:.45;cursor:default}
 .stepper button{min-height:46px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--tile);font-size:24px;font-weight:600;cursor:pointer;line-height:1;transition:transform .12s,background .2s}
 .stepper button:active{transform:scale(.94);background:var(--tile2)}
 .stepper input{text-align:center;font-weight:600;font-size:18px;-moz-appearance:textfield}
@@ -1484,8 +1486,8 @@ function home(){
  <div class="row"><div><div class="lbl">De la leçon</div><select id="from">${lessonOpts(S.from)}</select></div>
  <div><div class="lbl">Jusqu'à la leçon</div><select id="to">${lessonOpts(S.to)}</select></div></div>
  <div class="lbl">… ou jusqu'à la page du livre</div>
- <div class="stepper"><button type="button" id="pm" aria-label="Page précédente">−</button><input type="number" id="page" inputmode="numeric" min="6" max="124" step="1" placeholder="ex. 45" value="${S.page||''}" aria-label="Page du livre"><button type="button" id="pp" aria-label="Page suivante">+</button></div>
- ${S.page?`<p class="hint" style="margin-top:6px">Page ${S.page} → jusqu'à la leçon ${S.to}</p>`:''}
+ <div class="stepper"><button type="button" id="pm" aria-label="Page précédente">−</button><input type="number" id="page" inputmode="numeric" min="6" max="124" step="1" placeholder="ex. 45" value="${S.page||''}" aria-label="Page du livre"><button type="button" id="pp" aria-label="Page suivante">+</button><button type="button" id="pok" class="btn" disabled>Valider</button></div>
+ <p class="hint" id="pgprev" style="margin-top:6px">${S.page?`Page ${S.page} → jusqu'à la leçon ${S.to}`:'Choisis une page puis appuie sur Valider.'}</p>
  <p class="hint">Rien après « ${fmtPrompt(last.t)} » (leçon ${S.to}) n'apparaîtra dans les questions.</p>
  <div class="lbl">Difficulté</div>${seg('diff',[['easy','Facile<small>6 choix</small>'],['medium','Moyen<small>glisser-déposer</small>'],['hard','Difficile<small>tu écris toi-même</small>'],['mix','Mélangé<small>un peu de tout</small>']],'diff')}
  <div class="lbl">Que réviser ?</div>${seg('mode',[['mix','Tout mélangé'],['words','Mots'],['phrases','Phrases'],['grammar','Grammaire']])}
@@ -1500,15 +1502,15 @@ function home(){
  app.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{S.to=+b.dataset.d;S.page=null;if(S.from>S.to)S.from=S.to;save();home()});
  $('#from').onchange=e=>{S.from=+e.target.value;S.page=null;if(S.to<S.from)S.to=S.from;save();home()};
  $('#to').onchange=e=>{S.to=+e.target.value;S.page=null;if(S.from>S.to)S.from=S.to;save();home()};
- const setPage=(p,focus,defer)=>{p=Math.max(6,Math.min(124,Math.round(p)));S.page=p;let n=1;D.forEach(L=>{if(L.p<=p)n=L.n});S.to=n;if(S.from>n)S.from=1;save();
-  const redraw=()=>{home();if(focus){const i=$('#page');i.focus({preventScroll:true});try{const l=i.value.length;i.setSelectionRange(l,l)}catch(_){}}};
-  clearTimeout(window.__pgT);if(defer){const i=$('#page');if(+i.value!==p)i.value=p;window.__pgT=setTimeout(redraw,350)}else redraw()};
- const pg=$('#page');
- pg.addEventListener('input',()=>{const v=+pg.value;if(v>=6&&v<=124&&v!==S.page)setPage(v,true,true)});
- pg.addEventListener('keydown',e=>{if(e.key==='ArrowUp'||e.key==='ArrowDown'){e.preventDefault();const base=S.page||D.find(L=>L.n===S.to).p;setPage(base+(e.key==='ArrowUp'?1:-1),true,true)}else if(e.key==='Enter'){e.preventDefault();if(+pg.value)setPage(+pg.value,true)}});
- pg.addEventListener('blur',()=>{if(pg.value&&+pg.value!==S.page)setPage(+pg.value,false)});
- const step=d=>{const base=S.page||D.find(L=>L.n===S.to).p;setPage(base+d,false)};
- $('#pm').onclick=()=>step(-1);$('#pp').onclick=()=>step(1);
+ const lesOf=p=>{let n=1;D.forEach(L=>{if(L.p<=p)n=L.n});return n};
+ const pg=$('#page'),ok=$('#pok'),prev=$('#pgprev');
+ const preview=()=>{const v=+pg.value;const valid=v>=6&&v<=124;ok.disabled=!valid||v===S.page;
+  prev.textContent=valid?(v===S.page?`Page ${v} → jusqu'à la leçon ${S.to}`:`Page ${v} → leçon ${lesOf(v)} · appuie sur Valider`):(pg.value?'Page entre 6 et 124':'Choisis une page puis appuie sur Valider.')};
+ const bump=d=>{const base=+pg.value||S.page||D.find(L=>L.n===S.to).p;pg.value=Math.max(6,Math.min(124,base+d));preview()};
+ const apply=()=>{const v=+pg.value;if(!(v>=6&&v<=124))return;S.page=v;S.to=lesOf(v);if(S.from>S.to)S.from=1;save();home()};
+ pg.addEventListener('input',preview);
+ pg.addEventListener('keydown',e=>{if(e.key==='ArrowUp'||e.key==='ArrowDown'){e.preventDefault();bump(e.key==='ArrowUp'?1:-1)}else if(e.key==='Enter'){e.preventDefault();apply()}});
+ $('#pm').onclick=()=>bump(-1);$('#pp').onclick=()=>bump(1);ok.onclick=apply;
  app.querySelectorAll('.seg').forEach(g=>g.onclick=e=>{const b=e.target.closest('button');if(!b)return;const k=g.dataset.key;S[k]=k==='count'?+b.dataset.v:b.dataset.v;save();home()});
  $('#har').onchange=e=>{S.har=e.target.checked;save()};
  $('#go').onclick=()=>start(P);
