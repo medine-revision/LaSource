@@ -159,7 +159,7 @@ details.sec>.in{padding-bottom:12px}
 .res p{margin:0 0 6px}
 .res ul{margin:0;padding-inline-start:20px}
 .res li{margin:2px 0}
-.res .ar{font-size:1.2em}
+.res .ar{font-size:1.4em;font-weight:500}
 .lesgo{margin-top:12px;width:100%}
 @media(max-width:420px){.top>.ar{display:none}.top h1{font-size:20px}.kb button{font-size:20px;min-height:42px}.kb .r{gap:3px}.opts.six{grid-template-columns:minmax(0,1fr)}}
 @media(prefers-reduced-motion:reduce){.bar i{transition:none}}
@@ -298,7 +298,7 @@ details.les.mine{border-color:var(--tile)}
 </div>
 </header>
 <main id="app"></main>
-<footer><b>La Source asbl</b> — Science en pratique<br>Cours d'arabe et de sciences islamiques · 225 Chaussée de Jette, 1080 Bruxelles<br><a href="https://www.science-pratique.be/fr" target="_blank" rel="noopener">www.science-pratique.be</a> · info@science-pratique.be<br><span style="opacity:.6;font-size:12px">Version 27/11 · 14h</span></footer>
+<footer><b>La Source asbl</b> — Science en pratique<br>Cours d'arabe et de sciences islamiques · 225 Chaussée de Jette, 1080 Bruxelles<br><a href="https://www.science-pratique.be/fr" target="_blank" rel="noopener">www.science-pratique.be</a> · info@science-pratique.be<br><span style="opacity:.6;font-size:12px">Version 27/11 · 15h</span></footer>
 <script>
 const D=[
 {n:1,p:6,t:"Ceci — هٰذا, ما, مَنْ, أَ",
@@ -1751,7 +1751,7 @@ function show(){
    const u=q.kind==='letters'?ch.map(t=>t.t==='␣'?' ':t.t).join(''):ch.map(t=>t.t).join(' ');const k=q.oAr?nAr:nFr;done(q,k(u)===k(q.ans)?1:0,u)};
  }
 }
-function fmtPrompt(p){return esc(p).replace(/([؀-ۿ][؀-ۿً-ْٰ\s،؟]*[؀-ۿً-ْٰ؟])/g,m=>`<span class="ar">${S.har?m:stripH(m)}</span>`)}
+function fmtPrompt(p){return esc(p).replace(/([؀-ۿ][؀-ۿً-ْٰ\s،؟]*[؀-ۿً-ْٰ؟])/g,m=>`<span class="ar">${m}</span>`)}
 function done(q,res,user){
  answered=true;nAns++;const ok=res===1;streak=ok?streak+1:0;
  const qc=app.querySelector('.qcard');if(qc){qc.classList.remove('win','shake');void qc.offsetWidth;qc.classList.add(ok?'win':'shake');
@@ -1792,11 +1792,11 @@ function lessonBody(L,openGram){
  const [intro,...pts]=(SUM[L.n]||'').split('|');
  return `<div class="res"><h3>Résumé</h3><p>${esc(intro)}</p>${pts.length?`<ul>${pts.map(p=>`<li>${fmtPrompt(p)}</li>`).join('')}</ul>`:''}</div>
   <details class="sec" ${openGram?'open':''}><summary>1. Grammaire <small>${L.g.length} règle${L.g.length>1?'s':''}</small><span class="c">${CH}</span></summary><div class="in">
-  ${L.g.map(([t,d,ex])=>`<div class="rule"><h3>${fmtPrompt(t)}</h3><p>${d}</p>${ex.map(([a,f])=>`<div class="exl"><span class="ar" data-say="${esc(stripH(a))}">${esc(showAr(a))}</span><span>${esc(f)}</span></div>`).join('')}</div>`).join('')}</div></details>
+  ${L.g.map(([t,d,ex])=>`<div class="rule"><h3>${fmtPrompt(t)}</h3><p>${d}</p>${ex.map(([a,f])=>`<div class="exl"><span class="ar" data-say="${esc(stripH(a))}">${esc((a))}</span><span>${esc(f)}</span></div>`).join('')}</div>`).join('')}</div></details>
   <details class="sec"><summary>2. Vocabulaire <small>${words.length} mots${fo.length?' · '+fo.length+' formes':''}</small><span class="c">${CH}</span></summary><div class="in">
-  ${words.length?`<table class="v">${words.map(w=>`<tr><td>${esc(w.fr.split('/').join(', '))}</td><td class="ar" data-say="${esc(stripH(w.ar))}">${esc(showAr(w.ar))}</td></tr>`).join('')}</table>`:''}
-  ${fo.length?`<div class="sub">Pluriels, duels et féminins</div><table class="v">${fo.map(w=>`<tr><td>${esc(w.fr)} <span class="muted">(${KIND[w.kind].toLowerCase()})</span></td><td class="ar" data-say="${esc(stripH(w.form))}">${esc(showAr(w.base))} ← ${esc(showAr(w.form))}</td></tr>`).join('')}</table>`:''}</div></details>
-  ${ph.length?`<details class="sec"><summary>3. Phrases d'exemple <small>${ph.length} phrases</small><span class="c">${CH}</span></summary><div class="in"><table class="v">${ph.map(w=>`<tr><td>${esc(w.fr)}</td><td class="ar" data-say="${esc(stripH(w.ar))}">${esc(showAr(w.ar))}</td></tr>`).join('')}</table></div></details>`:''}`;
+  ${words.length?`<table class="v">${words.map(w=>`<tr><td>${esc(w.fr.split('/').join(', '))}</td><td class="ar" data-say="${esc(stripH(w.ar))}">${esc((w.ar))}</td></tr>`).join('')}</table>`:''}
+  ${fo.length?`<div class="sub">Pluriels, duels et féminins</div><table class="v">${fo.map(w=>`<tr><td>${esc(w.fr)} <span class="muted">(${KIND[w.kind].toLowerCase()})</span></td><td class="ar" data-say="${esc(stripH(w.form))}">${esc((w.base))} ← ${esc((w.form))}</td></tr>`).join('')}</table>`:''}</div></details>
+  ${ph.length?`<details class="sec"><summary>3. Phrases d'exemple <small>${ph.length} phrases</small><span class="c">${CH}</span></summary><div class="in"><table class="v">${ph.map(w=>`<tr><td>${esc(w.fr)}</td><td class="ar" data-say="${esc(stripH(w.ar))}">${esc((w.ar))}</td></tr>`).join('')}</table></div></details>`:''}`;
 }
 function cours(){
  app.innerHTML=`<p class="muted" style="margin-top:0">Les 23 leçons du Tome 1 (pages de la version arabe). Ouvre une leçon pour voir son résumé, sa grammaire et son vocabulaire.<span class="sayhint"> Touche un mot arabe pour l'entendre.</span></p>`+D.map(L=>{
