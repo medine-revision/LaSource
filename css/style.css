@@ -233,7 +233,6 @@ details.les.mine{border-color:var(--tile)}
 .hero::after{content:'';position:absolute;right:-40px;bottom:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.18),transparent 65%);animation:glow 7s ease-in-out infinite;pointer-events:none}
 @keyframes glow{50%{transform:translate(-30px,-16px) scale(1.12)}}
 .hero>*{position:relative;z-index:1}
-.hero svg.bgstar{display:none;position:absolute;width:230px;height:230px;inset-inline-end:-70px;top:-70px;opacity:.14;animation:ripple 6s ease-in-out infinite}
 @keyframes ripple{50%{transform:scale(1.06)}}
 .hero .hi{font-size:14px;opacity:.85;margin:0}
 .hero h2{font-size:clamp(24px,6vw,30px);line-height:1.15;margin:4px 0 2px;color:#fff;position:relative}
@@ -268,4 +267,4 @@ details.les.mine{border-color:var(--tile)}
 .rescard{text-align:center}
 .rescard h2{font-size:22px;margin:4px 0}
 .t.drag{background:var(--sand);color:#3a2b00}
-@media(prefers-reduced-motion:reduce){#app>*,.fb,#app .qcard.win,#app .qcard.shake,.opt.ok,.logo svg,.hero svg.bgstar,.hero::after{animation:none}.burst{display:none}}
+@media(prefers-reduced-motion:reduce){#app>*,.fb,#app .qcard.win,#app .qcard.shake,.opt.ok,.logo svg,.hero::after{animation:none}.burst{display:none}}

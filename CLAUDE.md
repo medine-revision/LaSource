@@ -133,3 +133,70 @@ docs/CONTENU.md         Format exact des données + comment ajouter/corriger du 
 - Choix « version française » pour les numéros de page (nécessite la page de début de chaque leçon dans l'édition FR).
 - Tome 2 : même format de données (voir docs/CONTENU.md §7).
 - Suivi de classe pour le professeur (nécessiterait une base de données en ligne, ex. Supabase/Firebase).
+
+## 11. Index des fonctions (où trouver quoi)
+
+| Fichier | Contient |
+|---|---|
+| `core/utils.js` | `$` (querySelector), `app` (#app), `LS.get/set` (localStorage protégé par try/catch), `HAR` (regex harakāt), `stripH`, `nAr` (arabe normalisé : sans voyelles, أإآ→ا, ة→ه, ى→ي, sans ponctuation), `nFr` (français normalisé : minuscules, sans accents ni articles), `esc` (échappement HTML), `rnd`/`shuf`/`pick` (hasard crypto), `lev`/`sim` (similarité 0–1) |
+| `core/items.js` | `ITEMS` (id `w5-3` = leçon 5, ligne 3 ; préfixes `w` `p` `f` `g`), `KIND` (pl/du/fe → libellé) |
+| `core/generators.js` | morphologie : `stem` (retire tanwīn/voyelle finale), `tStem` (ة→ت), `nom`/`gen`/`genI`/`accI`, `def`/`defN`/`defG` (ajout de ال avec lettres solaires) ; listes `FEM`, `ADJ` [masc, fém, fr, leçon], `COL`, `NOTN` (exclus), `OWN`, `CAT`/`CATS`/`catOf`/`isOpen`, `ADJOK`/`adjFits`/`pairNA`, `ADJBASE`, `NUM_M`/`NUM_F`, `PRON`, `VERB`, `SUF`/`withSuf`, `nouns()`, `mk()` (valide une question générée), `GENS` (liste des générateurs `{min,f(N)}`), `genQ(n)` |
+| `core/state.js` | `S`, `save()`, `DB`, `dbState`, `ME`, `keyOf(nom)`, `STATS()`, `persist()` (local + DB), `login(nom)`, `logout()`, `KNOWN`/`loadNames()` |
+| `ui/theme-audio.js` | `theme`, `applyTheme()`, `showAr()`, `speak()`, `sayBtn()`, `loadVoices()` (ajoute/retire la classe `noar` sur body) |
+| `ui/home.js` | `view`, `tab(v)`, `render()`, `inRange(item)`, `pool()` (items filtrés par leçons + mode), `lessonOpts`, `seg()` (boutons de choix), `DIFF`, `MODE`, `profileCard()`, `heroCard()`, `homeView()`, `historyView()` |
+| `quiz/build.js` | `dirPick`, `frSet`, `distract(it,champ,n)`, `fakeForms(it)`, `letterToks(ans)`, `SWAP`/`PART`/`mutations(ok)`, `fillOpts(ok,bad,n,pool)`, `levelFor()`, `build(it)` → objet question `{it,kind,ask,prompt,pAr,ans,target,oAr,opts,toks,six,keepHar,lv,ex}`, `check(q,saisie)` → 1 / 0.5 / 0 |
+| `quiz/keyboard.js` | `KB_ROWS`, `KB_EXTRA`, `HARK`, `CODE`/`SCODE` (code physique → lettre arabe, Maj = voyelles), `isTouch`, `insert`, `backspace`, `kbHTML()`, `wireKb(inp,submit)` |
+| `quiz/dnd.js` | `dnd(q)` → `{get(),clear()}` (pointer events, tap = ajouter/retirer) |
+| `quiz/session.js` | `Q`,`qi`,`score`,`errs`,`answered`,`nAns`,`streak`, `RECENT_N`, `recKey`, `simKey`, `draw(pool,n)`, `markSeen(it)`, `start(P,liste?)`, `rec(it,ok)`, `fitOpts()`, `show()`, `fmtPrompt(txt)`, `done(q,res,saisie)`, `next()`, `finish()` |
+| `ui/cours.js` | `CH` (chevron SVG), `lessonBody(L,grammaireOuverte)`, `cours()`, `openSheet(n)`, `gloss()`/`GLOSS`, `SUFX`, `glossWord(mot)` (mot à mot), `whyHTML(q)` |
+| `main.js` | `APP_VERSION`, démarrage (connexion DB, profil mémorisé `m1me`) |
+
+## 12. Recettes (comment faire…)
+
+**Corriger / ajouter du vocabulaire** → `js/data/lessons.js` (format dans docs/CONTENU.md). Si c'est un nom, l'ajouter à la bonne catégorie de `CAT` (generators.js) pour que les phrases générées restent logiques.
+
+**Ajouter un générateur de grammaire** → dans `GENS` (generators.js) : `{min:LEÇON, f(N){ … return mk(question, bonne, [mauvaises…], explication, leçon, 'code') }}`. Retourner `null` si impossible. ≥ 3 mauvaises réponses (complétées à 5 par `fillOpts`). Tester avec un `window.__gen=(to,n)=>{S.to=to;S.from=1;return genQ(n)}` temporaire dans une copie de test.
+
+**Ajouter un réglage** → valeur par défaut dans `S` (state.js), bouton via `seg('cle',[[valeur,'Libellé'],…])` dans `homeView()`, le clic est déjà géré (`.seg` → `S[k]=…; save(); homeView()`).
+
+**Ajouter un type de question** → `build()` (définir `kind`), rendu dans `show()`, correction dans `done()`/`check()`, libellé de niveau dans `show()` (`lvl`) et ligne du tableau §5.
+
+**Changer les couleurs** → variables `light-dark(clair, sombre)` en haut de `css/style.css` (`--bg --card --ink --mut --tile --tile2 --sand --accent --ok --bad --line --head`). Vérifier le contraste en mode jour.
+
+**Mettre à jour la version claude.ai** → `python3 tools/build_single.py` puis publier `dist/medine-revision.html` comme `index.html` de l'artefact `4dd6abd2-6a0b-4933-a9e0-578cc89c3662` (la capacité `db` y est déclarée).
+
+## 13. Conventions de code
+- JS compact (style du projet), sans dépendance. Pas de `alert/confirm/prompt`.
+- Toute donnée affichée → `esc()`. L'arabe dans du texte français → `fmtPrompt()`.
+- Textes de l'interface en **français**, courts, sans jargon. Termes arabes de grammaire en translittération simple (iḍāfa, tanwīn, harakāt).
+- Toujours prévoir le **téléphone** (390 px) : cibles ≥ 44 px, pas de débordement horizontal.
+- Respecter `prefers-reduced-motion` pour toute nouvelle animation.
+- Commits en français, message clair, avec les lignes d'attribution demandées par la session.
+
+## 14. Notes d'environnement (sandbox Claude)
+- Chrome : `/usr/bin/google-chrome` ; Playwright Python installé. Google Fonts est **bloqué** dans le sandbox → les captures utilisent une police de repli (normal).
+- Pas d'installation de paquets (réseau limité). `curl` vers github.io ne marche pas : on ne peut pas vérifier le site en ligne, seulement en local (`file://…/index.html`).
+- Git : `git -c push.negotiate=true push origin main`. Le remote doit être `https://github.com/medine-revision/LaSource`. Si refus 403 : l'app Claude n'a pas accès à l'organisation → demander à l'utilisateur.
+- Dans les tests, une série se termine sur `.rescard` (anneau de score) — pas `.score`.
+
+## 15. Glossaire
+- **harakāt** : voyelles brèves (ـَ ـُ ـِ), sukūn (ـْ), shadda (ـّ). **tanwīn** : ـٌ ـٍ ـً (indéfini).
+- **iḍāfa** : annexion « le X de Y ». **muḍāf / muḍāf ilayhi** : 1er / 2e nom.
+- **diptote** (mamnūʿ min aṣ-ṣarf) : pas de tanwīn, génitif en ـَ.
+- **pluriel brisé** : pluriel irrégulier (كِتابٌ → كُتُبٌ).
+- **lettres solaires** : ت ث د ذ ر ز س ش ص ض ط ظ ل ن (ال assimilé, shadda).
+
+## 16. Journal des versions (résumé)
+| Étape | Contenu |
+|---|---|
+| v1 | Site de base : 23 leçons, quiz, cours, mode nuit |
+| v2 | 3 niveaux, clavier arabe, profils par prénom, grammaire générée |
+| v3 | Cours structuré (résumé → grammaire → vocabulaire), « Écouter » masqué sans voix arabe |
+| v4 | Identité La Source asbl, logo, explications « Pourquoi ? », animations |
+| v5 | Contraste mode jour, QCM 6 choix plus durs, générateur logique, dégradés |
+| v6 | Page du livre (−/+/Valider), texte qui ne déborde plus, note version arabe |
+| v7 | Harakāt lisibles (Noto Naskh, ≥ 23 px), toujours visibles dans le cours |
+| v8 | Tirage 100 % aléatoire + anti-répétition sur 40 questions |
+| v9 | Projet découpé en fichiers + documentation + outils de test |
+
+Ajouter une ligne ici à chaque évolution importante.

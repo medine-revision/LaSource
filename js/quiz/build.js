@@ -1,21 +1,6 @@
 /* Construit une question affichable à partir d'un item (choix multiple à 6, glisser-déposer, lettres, écriture) selon la difficulté ; pièges (distract, mutations, fillOpts) ; vérification des réponses écrites (check).
    Fichier chargé dans l'ordre défini par index.html : voir CLAUDE.md. */
 /* ---------- construction des questions ---------- */
-function weight(it){const s=STATS()[it.id];if(!s)return 1.6;return Math.max(.4,1+(s.w*2-s.r*.5))}
-function sample(P,n){
- const byT={};P.forEach(i=>(byT[i.type]=byT[i.type]||[]).push(i));
- const out=[];const used=new Set();n=Math.min(n,P.length);
- const types=Object.keys(byT);const tw={w:3,p:3,g:3.5,f:1.5};
- while(out.length<n){
-  const avail=types.filter(t=>byT[t].some(i=>!used.has(i.id)));if(!avail.length)break;
-  let tot=avail.reduce((a,t)=>a+tw[t],0),r=Math.random()*tot,t=avail[0];
-  for(const x of avail){r-=tw[x];if(r<=0){t=x;break}}
-  const cand=byT[t].filter(i=>!used.has(i.id));let sw=cand.reduce((a,i)=>a+weight(i),0),q=Math.random()*sw,ch=cand[0];
-  for(const i of cand){q-=weight(i);if(q<=0){ch=i;break}}
-  used.add(ch.id);out.push(ch);
- }
- return out;
-}
 const dirPick=()=>S.dir==='both'?(Math.random()<.5?'ar-fr':'fr-ar'):S.dir;
 const frSet=x=>new Set(x.split('/').map(nFr).filter(Boolean));
 function distract(it,field,n=5){

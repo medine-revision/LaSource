@@ -19,10 +19,9 @@ function profileCard(){
  ${KNOWN.length?`<div class="chips">${KNOWN.map(n=>`<button class="chip" type="button" data-n="${esc(n)}">${esc(n)}</button>`).join('')}</div>`:''}
  <p class="note">Pas de mot de passe : écris ton prénom pour retrouver ton historique. ${dbState==='wait'?'Connexion au stockage partagé…':DB?'Les résultats sont synchronisés entre tes appareils.':'Stockage partagé indisponible ici : les résultats restent sur cet appareil.'}</p></section>`;
 }
-const STAR='<svg class="bgstar" viewBox="0 0 100 100" aria-hidden="true"><g fill="none" stroke="#fff"><circle cx="50" cy="50" r="12" stroke-width="2"/><circle cx="50" cy="50" r="24" stroke-width="1.6"/><circle cx="50" cy="50" r="36" stroke-width="1.2"/><circle cx="50" cy="50" r="48" stroke-width=".8"/></g></svg>';
 function heroCard(){
  const hr=new Date().getHours();const hi=hr<18?'Salam':'Bonsoir';
- return `<section class="hero">${STAR}<p class="hi">${hi}${ME?' '+esc(ME.name):''}</p><h2>Leçon ${S.from===S.to?S.to:S.from+' à '+S.to}</h2><p class="sub2">${fmtPrompt(D.find(L=>L.n===S.to).t)}</p>
+ return `<section class="hero"><p class="hi">${hi}${ME?' '+esc(ME.name):''}</p><h2>Leçon ${S.from===S.to?S.to:S.from+' à '+S.to}</h2><p class="sub2">${fmtPrompt(D.find(L=>L.n===S.to).t)}</p>
  <div class="dots" role="group" aria-label="Choisir la dernière leçon étudiée">${D.map(L=>`<button type="button" data-d="${L.n}" class="${L.n>=S.from&&L.n<=S.to?'in':L.n<S.from?'past':''}" aria-label="Jusqu'à la leçon ${L.n}" title="Leçon ${L.n}"></button>`).join('')}</div>
  <div class="dots-l"><span>Leçon 1</span><span>Touche un point pour choisir</span><span>23</span></div></section>`;
 }
