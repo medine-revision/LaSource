@@ -163,6 +163,9 @@ details.sec>.in{padding-bottom:12px}
 .lesgo{margin-top:12px;width:100%}
 @media(max-width:420px){.top>.ar{display:none}.top h1{font-size:20px}.kb button{font-size:20px;min-height:42px}.kb .r{gap:3px}.opts.six{grid-template-columns:minmax(0,1fr)}}
 @media(prefers-reduced-motion:reduce){.bar i{transition:none}}
+.opt .ot{flex:1;min-width:0;white-space:nowrap;overflow:hidden;overflow-wrap:anywhere;line-height:1.3}
+.opt.ar .ot{text-align:right}
+
 .stepper{display:grid;grid-template-columns:48px minmax(0,1fr) 48px auto;gap:8px}
 .stepper #pok{min-height:46px;padding:8px 16px;font-size:15px;color:#fff;background:var(--tile)}
 .stepper #pok:disabled{opacity:.45;cursor:default}
@@ -1696,11 +1699,19 @@ function start(P,list){
  Q=items.map(build);qi=0;score=0;errs=[];nAns=0;streak=0;show();
 }
 function rec(it,ok){if(it.gen)return;const st=STATS();const s=st[it.id]||{r:0,w:0};ok?s.r++:s.w++;st[it.id]=s}
+function fitOpts(){
+ app.querySelectorAll('.opt .ot').forEach(el=>{el.style.fontSize='';el.style.whiteSpace='nowrap';
+  let fs=parseFloat(getComputedStyle(el).fontSize);const min=el.closest('.opt').classList.contains('ar')?18:14;
+  while(el.scrollWidth>el.clientWidth+1&&fs>min){fs-=1;el.style.fontSize=fs+'px'}
+  if(el.scrollWidth>el.clientWidth+1)el.style.whiteSpace='normal'});
+}
+let fitT;window.addEventListener('resize',()=>{clearTimeout(fitT);fitT=setTimeout(fitOpts,120)});
+document.fonts&&document.fonts.ready.then(()=>fitOpts());
 function show(){
  answered=false;window.scrollTo(0,0);const q=Q[qi];const pct=qi/Q.length*100;
  const long=q.pAr&&q.prompt.length>24;
  let body='';
- if(q.kind==='qcm')body=`<div class="opts ${q.six?'six':''}">${q.opts.map((o,i)=>`<button class="opt ${q.oAr?'ar':''}" data-i="${i}"><span class="k">${'ABCDEF'[i]}</span><span>${esc(q.oAr&&!q.keepHar?showAr(o):o)}</span></button>`).join('')}</div>`;
+ if(q.kind==='qcm')body=`<div class="opts ${q.six?'six':''}">${q.opts.map((o,i)=>`<button class="opt ${q.oAr?'ar':''}" data-i="${i}"><span class="k">${'ABCDEF'[i]}</span><span class="ot">${esc(q.oAr?(q.keepHar?o:showAr(o)):o.split('/').join(' / '))}</span></button>`).join('')}</div>`;
  else if(q.kind==='write')body=`<form class="ans" id="f"><input type="text" id="inp" class="${q.oAr?'ar':''}" dir="${q.oAr?'rtl':'ltr'}" lang="${q.oAr?'ar':'fr'}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" ${q.oAr&&S.kb&&isTouch?'inputmode="none"':''} placeholder="${q.oAr?'اُكْتُبْ هُنا':'Ta réponse…'}"><button class="btn">OK</button></form>
   ${q.oAr?`<div class="kbbar"><label><input type="checkbox" id="kbon" ${S.kb?'checked':''}> Clavier arabe à l'écran</label>${isTouch?'':`<label><input type="checkbox" id="pckb" ${S.pckb?'checked':''}> Clavier du PC → arabe</label>`}</div>${kbHTML()}`:''}`;
  else body=`<div class="tiles ${q.oAr?'rtl':''}" id="dst"></div><div class="tiles pool ${q.oAr?'rtl':''}" id="src"></div><div class="actions"><button class="btn ghost" id="clr" type="button">Effacer</button><button class="btn" id="val" type="button">Valider</button></div>`;
@@ -1713,6 +1724,7 @@ function show(){
  ${body}<div id="out"></div></section>
  <div class="actions"><button class="btn ghost" id="quit">Arrêter</button></div>`;
  $('#quit').onclick=finish;
+ requestAnimationFrame(fitOpts);
  if(q.kind==='qcm')app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{if(answered)return;const o=q.opts[+b.dataset.i];const ok=o===q.ans;app.querySelectorAll('.opt').forEach(x=>{if(q.opts[+x.dataset.i]===q.ans)x.classList.add('ok')});if(!ok)b.classList.add('bad');done(q,ok?1:0,o)});
  if(q.kind==='write'){const inp=$('#inp');
   const submit=()=>{if(answered){next();return}if(!inp.value.trim())return;done(q,check(q,inp.value),inp.value)};
