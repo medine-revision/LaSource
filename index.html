@@ -298,7 +298,7 @@ details.les.mine{border-color:var(--tile)}
 </div>
 </header>
 <main id="app"></main>
-<footer><b>La Source asbl</b> — Science en pratique<br>Cours d'arabe et de sciences islamiques · 225 Chaussée de Jette, 1080 Bruxelles<br><a href="https://www.science-pratique.be/fr" target="_blank" rel="noopener">www.science-pratique.be</a> · info@science-pratique.be<br><span style="opacity:.6;font-size:12px">Version 27/11 · 15h</span></footer>
+<footer><b>La Source asbl</b> — Science en pratique<br>Cours d'arabe et de sciences islamiques · 225 Chaussée de Jette, 1080 Bruxelles<br><a href="https://www.science-pratique.be/fr" target="_blank" rel="noopener">www.science-pratique.be</a> · info@science-pratique.be<br><span style="opacity:.6;font-size:12px">Version 27/11 · 15h20</span></footer>
 <script>
 const D=[
 {n:1,p:6,t:"Ceci — هٰذا, ما, مَنْ, أَ",
@@ -1313,8 +1313,9 @@ const nAr=s=>stripH(s).replace(/ـ/g,'').replace(/[أإآٱ]/g,'ا').replace(/ة
 const ART=new Set(['le','la','les','un','une','des','du','de','au','aux','a']);
 const nFr=s=>s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/œ/g,'oe').replace(/[’`]/g,"'").replace(/\(.*?\)/g,' ').replace(/\b[ldj]'/g,' ').replace(/[^a-z0-9 ]/g,' ').split(/\s+/).filter(w=>w&&!ART.has(w)).join(' ');
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
-const pick=a=>a[Math.random()*a.length|0];
+const rnd=n=>{try{const b=new Uint32Array(1);crypto.getRandomValues(b);return b[0]%n}catch(e){return Math.random()*n|0}};
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
+const pick=a=>a[rnd(a.length)];
 function lev(a,b){if(a===b)return 0;const m=a.length,n=b.length;if(!m)return n;if(!n)return m;let p=Array.from({length:n+1},(_,i)=>i);for(let i=1;i<=m;i++){let c=[i];for(let j=1;j<=n;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));p=c}return p[n]}
 const sim=(a,b)=>1-lev(a,b)/Math.max(a.length,b.length,1);
 
@@ -1702,9 +1703,24 @@ function dnd(q,onChange){
 
 /* ---------- session ---------- */
 let Q=[],qi=0,score=0,errs=[],answered=false,nAns=0,streak=0;
+/* tirage 100 % aléatoire + pas de question semblable aux 40 dernières */
+const RECENT_N=40;
+const recKey=()=>'m1recent:'+(ME?ME.key:'guest');
+const simKey=it=>it.type==='g'?(it.gen?'G:'+nAr(it.ok):'g:'+it.id):it.type==='f'?'w:'+nAr(it.base).replace(/^ال/,''):it.type==='w'?'w:'+nAr(it.ar).replace(/^ال/,''):'p:'+nAr(it.ar);
+function draw(pool,n){
+ const recent=LS.get(recKey(),[]);const rset=new Set(recent);
+ const out=[],keys=new Set();
+ const fresh=shuf(pool).filter(it=>!rset.has(simKey(it)));
+ for(const it of fresh){const k=simKey(it);if(keys.has(k))continue;keys.add(k);out.push(it);if(out.length>=n)break}
+ if(out.length<n){const age=k=>{const i=recent.indexOf(k);return i<0?-1:i};
+  const rest=shuf(pool).filter(it=>!keys.has(simKey(it))).sort((a,b)=>age(simKey(a))-age(simKey(b)));
+  for(const it of rest){const k=simKey(it);if(keys.has(k))continue;keys.add(k);out.push(it);if(out.length>=n)break}}
+ return out;
+}
+function markSeen(it){const k=simKey(it);let r=LS.get(recKey(),[]).filter(x=>x!==k);r.push(k);if(r.length>RECENT_N)r=r.slice(-RECENT_N);LS.set(recKey(),r)}
 function start(P,list){
  let items=list;
- if(!items){let pp=P;if(S.mode==='mix'||S.mode==='grammar'){const sg=P.filter(i=>i.type==='g').length;pp=P.concat(genQ(Math.max(20,sg*2)))}items=sample(pp,S.count)}
+ if(!items){let pp=P;if(S.mode==='mix'||S.mode==='grammar'){const sg=P.filter(i=>i.type==='g').length;pp=P.concat(genQ(Math.max(20,sg*2)))}items=draw(pp,S.count)}
  Q=items.map(build);qi=0;score=0;errs=[];nAns=0;streak=0;show();
 }
 function rec(it,ok){if(it.gen)return;const st=STATS();const s=st[it.id]||{r:0,w:0};ok?s.r++:s.w++;st[it.id]=s}
@@ -1717,7 +1733,7 @@ function fitOpts(){
 let fitT;window.addEventListener('resize',()=>{clearTimeout(fitT);fitT=setTimeout(fitOpts,120)});
 document.fonts&&document.fonts.ready.then(()=>fitOpts());
 function show(){
- answered=false;window.scrollTo(0,0);const q=Q[qi];const pct=qi/Q.length*100;
+ answered=false;window.scrollTo(0,0);markSeen(Q[qi].it);const q=Q[qi];const pct=qi/Q.length*100;
  const long=q.pAr&&q.prompt.length>24;
  let body='';
  if(q.kind==='qcm')body=`<div class="opts ${q.six?'six':''}">${q.opts.map((o,i)=>`<button class="opt ${q.oAr?'ar':''}" data-i="${i}"><span class="k">${'ABCDEF'[i]}</span><span class="ot">${esc(q.oAr?(q.keepHar?o:showAr(o)):o.split('/').join(' / '))}</span></button>`).join('')}</div>`;
