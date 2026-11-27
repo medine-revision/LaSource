@@ -19,12 +19,30 @@ const CAT={hum:'مُدَرِّسٌ طالِبٌ طَبِيبٌ تاجِرٌ رَ
  ani:'كَلْبٌ قِطٌّ حِمارٌ حِصانٌ جَمَلٌ دِيكٌ بَقَرَةٌ دَجاجَةٌ بَطَّةٌ ناقَةٌ عُصْفُورٌ طائِرٌ',
  body:'عَيْنٌ أُذُنٌ أَنْفٌ فَمٌ يَدٌ رِجْلٌ',
  abs:'دَرْسٌ كَلِمَةٌ لُغَةٌ اخْتِبارٌ سُؤالٌ',
+ nature:'جَبَلٌ بَحْرٌ نَهْرٌ حَقْلٌ',
+ cont:'حَقِيبَةٌ ثَلّاجَةٌ قِدْرٌ كُوبٌ جَيْبٌ فِنْجانٌ دُرْجٌ',
+ surf:'مَكْتَبٌ سَرِيرٌ كُرْسِيٌّ سَبُّورَةٌ',
  open:'بابٌ نافِذَةٌ حَقِيبَةٌ دُكّانٌ مَسْجِدٌ مَكْتَبَةٌ ثَلّاجَةٌ مَطْعَمٌ',
- skip:'قَهْوَةٌ فاكِهَةٌ بَيْضَةٌ رِيالٌ قِرْشٌ اسْمٌ عِيدٌ سَنَةٌ شَهْرٌ أُسْبُوعٌ يَوْمٌ ثَمَنٌ نِصْفٌ زِيارَةٌ دِينٌ رَبٌّ رَسُولٌ نَبِيٌّ حالٌ لَوْنٌ قِبْلَةٌ رَكْعَةٌ حَرْفٌ نَجْمٌ قَمَرٌ شَمْسٌ حَجَرٌ إِمامٌ'};
+ skip:'دَقِيقَةٌ قَهْوَةٌ فاكِهَةٌ بَيْضَةٌ رِيالٌ قِرْشٌ اسْمٌ عِيدٌ سَنَةٌ شَهْرٌ أُسْبُوعٌ يَوْمٌ ثَمَنٌ نِصْفٌ زِيارَةٌ دِينٌ رَبٌّ رَسُولٌ نَبِيٌّ حالٌ لَوْنٌ قِبْلَةٌ رَكْعَةٌ حَرْفٌ نَجْمٌ قَمَرٌ شَمْسٌ حَجَرٌ إِمامٌ'};
 const CATS={};for(const[k,v] of Object.entries(CAT))v.split(' ').forEach(w=>{(CATS[w]=CATS[w]||new Set()).add(k)});
-const catOf=a=>{const c=CATS[a];if(!c)return 'obj';for(const k of ['hum','place','veh','ani','body','abs','skip'])if(c.has(k))return k;return 'obj'};
+const catOf=a=>{const c=CATS[a];if(!c)return 'obj';for(const k of ['hum','nature','place','veh','ani','body','abs','skip'])if(c.has(k))return k;return 'obj'};
 const isOpen=a=>!!(CATS[a]&&CATS[a].has('open'));
-const ADJOK={'grand':'hum place veh ani body obj','petit':'hum place veh ani body obj','nouveau':'hum place veh obj','ancien':'place veh obj','beau':'hum place veh ani body obj','propre':'place veh obj body','sale':'place veh obj body','loin':'place','proche':'place','cassé':'veh obj','lourd':'obj','léger':'obj','long':'hum obj','court':'hum obj','rapide':'veh ani','facile':'abs','difficile':'abs','bon marché':'veh obj','spacieux':'place'};
+const hasTag=(a,t)=>!!(CATS[a]&&CATS[a].has(t));
+/* Prépositions : on n'associe que des noms qui ont du sens (« dans la chambre », pas « vers le sac »). */
+const PREPS=[['في','dans',n=>['place','veh'].includes(catOf(n.ar))||hasTag(n.ar,'cont')],
+ ['عَلىٰ','sur',n=>hasTag(n.ar,'surf')],
+ ['مِنْ','de (provenance)',n=>catOf(n.ar)==='place'],
+ ['إِلىٰ','vers',n=>['place','hum'].includes(catOf(n.ar))]];
+/* Iḍāfa : « la porte de la mosquée », « la voiture du médecin » — pas « la maison de l'école ». */
+const BLD='بَيْتٌ مَسْجِدٌ مَدْرَسَةٌ جامِعَةٌ فُنْدُقٌ مَطْعَمٌ مَكْتَبَةٌ دُكّانٌ شَرِكَةٌ كُلِّيَّةٌ';
+const PARTS={'بابٌ':BLD+' سَيّارَةٌ غُرْفَةٌ فَصْلٌ','نافِذَةٌ':BLD+' سَيّارَةٌ غُرْفَةٌ فَصْلٌ','مِفْتاحٌ':BLD+' سَيّارَةٌ غُرْفَةٌ','غُرْفَةٌ':'بَيْتٌ فُنْدُقٌ','مَطْبَخٌ':'بَيْتٌ مَطْعَمٌ فُنْدُقٌ','حَمّامٌ':'بَيْتٌ مَدْرَسَةٌ فُنْدُقٌ','حَدِيقَةٌ':'بَيْتٌ مَدْرَسَةٌ مَسْجِدٌ جامِعَةٌ','مُدِيرٌ':'مَدْرَسَةٌ جامِعَةٌ شَرِكَةٌ كُلِّيَّةٌ فُنْدُقٌ مَطْعَمٌ','سَبُّورَةٌ':'فَصْلٌ مَدْرَسَةٌ','عَجَلَةٌ':'سَيّارَةٌ دَرّاجَةٌ حافِلَةٌ','إِمامٌ':'مَسْجِدٌ','مُؤَذِّنٌ':'مَسْجِدٌ'};
+const POSS=new Set('بَيْتٌ غُرْفَةٌ حَدِيقَةٌ دُكّانٌ مَكْتَبٌ'.split(' '));
+/* « la porte de la mosquée », « le livre de l'enseignant » — jamais « la montagne du vieil homme ». */
+const idafaOk=(A,B)=>PARTS[A.ar]?PARTS[A.ar].split(' ').includes(B.ar):catOf(B.ar)==='hum'&&A.ar!==B.ar&&(['obj','veh','ani'].includes(catOf(A.ar))||POSS.has(A.ar));
+/* Noms « comptables / possédables » (pas soleil, lune, nom de fête…) */
+const FAMILY=new Set('أُمٌّ عَمٌّ خالٌ عَمَّةٌ خالَةٌ زَوْجٌ'.split(' '));
+const plain=N=>N.filter(x=>catOf(x.ar)!=='skip'&&!FAMILY.has(x.ar));
+const ADJOK={'grand':'hum place veh ani body obj nature','petit':'hum place veh ani body obj nature','nouveau':'hum place veh obj','ancien':'place veh obj','beau':'hum place veh ani body obj nature','propre':'place veh obj body','sale':'place veh obj body','loin':'place nature','proche':'place nature','cassé':'veh obj','lourd':'obj','léger':'obj','long':'hum obj','court':'hum obj','rapide':'veh ani','facile':'abs','difficile':'abs','bon marché':'veh obj','spacieux':'place'};
 const adjFits=(a,n)=>{if(a[2]==='ouvert'||a[2]==='fermé')return isOpen(n.ar);const c=catOf(n.ar);return c!=='skip'&&(ADJOK[a[2]]||'').split(' ').includes(c)};
 function pairNA(N){const As=ADJ.filter(x=>x[3]<=S.to);for(let t=0;t<40;t++){const n=pick(N),a=pick(As);if(adjFits(a,n))return[n,a]}return[null,null]}
 const ADJBASE=new Set(ADJ.map(a=>a[0]).concat(['غَنِيٌّ','فَقِيرٌ','مُجْتَهِدٌ','قَوِيٌّ','ضَعِيفٌ','قَدِيمٌ']));
@@ -33,7 +51,9 @@ const PRON=[['أَنا','je',15,'ْتُ'],['أَنْتَ','tu (homme)',15,'ْت�
 const VERB=[['ذَهَ','ب','aller',4],['خَرَ','ج','sortir',4],['جَلَ','س','s\'asseoir',8],['رَجَ','ع','revenir',15]];
 const SUF=[['ي','mon / ma',10],['كَ','ton / ta (à un homme)',10],['كِ','ton / ta (à une femme)',10],['هُ','son / sa (à lui)',10],['ها','son / sa (à elle)',10],['نا','notre',14],['كُمْ','votre (hommes)',14],['هُمْ','leur (à eux)',14],['كُنَّ','votre (femmes)',15],['هُنَّ','leur (à elles)',15]];
 const withSuf=(s,suf)=>suf==='ي'?tStem(s)+'ِي':tStem(s)+'ُ'+suf;
-const fe=w=>/\s/.test(w)||/e$/.test(w)?w:w+'(e)';
+const COLF={rouge:'rouge',vert:'vert(e)',jaune:'jaune',bleu:'bleu(e)',blanc:'blanc(he)',noir:'noir(e)'};
+const adjFr=(a,n)=>catOf(n.ar)==='hum'&&a[2]==='long'?'grand':catOf(n.ar)==='hum'&&a[2]==='court'?'petit':a[2];
+const fe=w=>/\s/.test(w)||/e$/.test(w)||w==='loin'?w:w+'(e)';
 function nouns(){
  return ITEMS.filter(i=>i.type==='w'&&i.L<=S.to&&!/\s/.test(i.ar)&&/ٌ/.test(i.ar)&&!i.ar.startsWith('ال')&&!NOTN.has(i.ar))
   .map(i=>({ar:i.ar,fr:i.fr.split('/')[0].replace(/\s*\(.*\)/,''),f:FEM.has(i.ar)||stem(i.ar).endsWith('ة'),L:i.L}))
@@ -47,22 +67,22 @@ const GENS=[
   const bad=D4.map(d=>d[0]+' '+n.ar).concat([S.to>=8?(far?'ذٰلِكَ':'هٰذا')+' '+defN(n.ar):n.ar+' هٰذا',(n.f?'هٰذا':'هٰذِهِ')+' '+nom(n.ar),'هٰذا '+nom(n.ar)]);
   return mk(`« ${far?'Cela (loin)':'Ceci'} est … » avec ${n.ar} (${n.fr})`,ok,shuf(bad),`${n.ar} est ${n.f?'féminin':'masculin'} et ${far?'éloigné':'proche'}.`,n.L,'dem')}},
  {min:3,f(N){const[n,a]=pairNA(N);if(!n)return null;const ok=defN(n.ar)+' '+agree(a,n.f);
-  return mk(`« Le/la ${n.fr} est ${fe(a[2])} » — ${n.ar} + ${a[0]}`,ok,shuf([defN(n.ar)+' '+def(agree(a,n.f))+'ُ',n.ar+' '+agree(a,n.f),S.to>=6?defN(n.ar)+' '+agree(a,!n.f):defN(n.ar)+' '+nom(agree(a,n.f)),defN(n.ar)+' '+nom(agree(a,n.f))]),'Phrase nominale : sujet défini + attribut indéfini (tanwīn), accordé en genre.',n.L,'attr')}},
+  return mk(`« Le/la ${n.fr} est ${fe(adjFr(a,n))} » — ${n.ar} + ${a[0]}`,ok,shuf([defN(n.ar)+' '+def(agree(a,n.f))+'ُ',n.ar+' '+agree(a,n.f),S.to>=6?defN(n.ar)+' '+agree(a,!n.f):defN(n.ar)+' '+nom(agree(a,n.f)),defN(n.ar)+' '+nom(agree(a,n.f))]),'Phrase nominale : sujet défini + attribut indéfini (tanwīn), accordé en genre.',n.L,'attr')}},
  {min:9,f(N){const[n,a]=pairNA(N);if(!n)return null;const A=agree(a,n.f),W=agree(a,!n.f);const d=Math.random()<.5;
   const ok=d?defN(n.ar)+' '+def(A)+'ُ':n.ar+' '+A;
   const bad=d?[defN(n.ar)+' '+A,nom(n.ar)+' '+def(A)+'ُ',defN(n.ar)+' '+def(W)+'ُ']:[n.ar+' '+def(A)+'ُ',n.ar+' '+W,defN(n.ar)+' '+A];
-  return mk(`« ${d?'le/la':'un(e)'} ${n.fr} ${fe(a[2])} » (adjectif épithète)`,ok,shuf(bad),"L'épithète suit le nom : même définitude, même genre, même cas.",n.L,'epi')}},
- {min:4,f(N){const n=pick(N);const P=pick([['في','dans'],['عَلىٰ','sur'],['مِنْ','de'],['إِلىٰ','vers']]);const p=P[0]==='مِنْ'?'مِنَ':P[0];
+  return mk(`« ${d?'le/la':'un(e)'} ${n.fr} ${fe(adjFr(a,n))} » (adjectif épithète)`,ok,shuf(bad),"L'épithète suit le nom : même définitude, même genre, même cas.",n.L,'epi')}},
+ {min:4,f(N){const P=pick(PREPS);const C=N.filter(P[2]);if(!C.length)return null;const n=pick(C);const p=P[0]==='مِنْ'?'مِنَ':P[0];
   return mk(`« ${P[1]} + le/la ${n.fr} » (${n.ar})`,p+' '+defG(n.ar),shuf([p+' '+defN(n.ar),p+' '+def(n.ar)+'َ',p+' '+gen(n.ar),P[0]==='مِنْ'?'مِنْ '+defN(n.ar):p+' '+genI(n.ar)]),'Après une préposition : nom au génitif (ـِ).'+(P[0]==='مِنْ'?' مِنْ + ال → مِنَ.':''),n.L,'jar')}},
- {min:5,f(N){const A=pick(N.filter(x=>['obj','veh','place','ani'].includes(catOf(x.ar))));if(!A)return null;const NB=N.filter(x=>OWN.has(x.ar)&&x.ar!==A.ar);if(!NB.length)return null;const B=pick(NB);
+ {min:5,f(N){let A,B;for(let t=0;t<40&&!B;t++){A=pick(N);const NB=N.filter(x=>x.ar!==A.ar&&idafaOk(A,x));if(NB.length)B=pick(NB)}if(!B)return null;
   return mk(`« ${A.fr} de ${B.fr} » (le/la… de…) — ${A.ar} + ${B.ar}`,nom(A.ar)+' '+defG(B.ar),shuf([defN(A.ar)+' '+defG(B.ar),A.ar+' '+defG(B.ar),nom(A.ar)+' '+defN(B.ar)]),'Iḍāfa : 1er nom sans ال ni tanwīn, 2e nom au génitif.',Math.max(A.L,B.L),'idafa')}},
- {min:10,f(N){const n=pick(N.filter(x=>!/[يى]ّ?$/.test(stem(x.ar))));if(!n)return null;const av=SUF.filter(s=>s[2]<=S.to);const s=pick(av);const ok=withSuf(n.ar,s[0]);
+ {min:10,f(N){const n=pick(N.filter(x=>!/[يى]ّ?$/.test(stem(x.ar))&&(catOf(x.ar)!=='skip'||x.ar==='اسْمٌ')));if(!n)return null;const av=SUF.filter(s=>s[2]<=S.to);const s=pick(av);const ok=withSuf(n.ar,s[0]);
   return mk(`« ${s[1]} ${n.fr} » (${n.ar})`,ok,shuf(shuf(av.filter(x=>x!==s)).slice(0,2).map(x=>withSuf(n.ar,x[0])).concat(['ال'+ok,tStem(n.ar)+'ٌ'+s[0]])),`Suffixe ـ${s[0]} ; pas de ال${stem(n.ar).endsWith('ة')?', et ة devient ت':''}.`,n.L,'suf')}},
  {min:13,f(){const v=pick(VERB.filter(x=>x[3]<=S.to));const av=PRON.filter(p=>p[2]<=S.to);const p=pick(av);const F=x=>v[0]+v[1]+x[3];
   return mk(`Passé de ${v[0]+v[1]+'َ'} (${v[2]}) avec ${p[0]} (${p[1]})`,F(p),shuf(shuf(av.filter(x=>x!==p)).map(F)),`${p[0]} → terminaison ـ${p[3]}`,Math.max(p[2],v[3]),'conj')}},
- {min:18,f(N){const n=pick(N);const t=tStem(n.ar);const pl=ITEMS.find(i=>i.type==='f'&&i.kind==='pl'&&i.base===n.ar);
+ {min:18,f(N){const n=pick(plain(N));if(!n)return null;const t=tStem(n.ar);const pl=ITEMS.find(i=>i.type==='f'&&i.kind==='pl'&&i.base===n.ar);
   return mk(`« deux ${n.fr} » (sujet de la phrase) — ${n.ar}`,t+'انِ',shuf([t+'َيْنِ',stem(n.ar)+(stem(n.ar).endsWith('ة')?'انِ':'ونَ'),pl?pl.form:t+'اتٌ',t+'انُ']),'Duel sujet : ـانِ (ة devient ت). ـَيْنِ seulement après préposition ou en complément.',Math.max(18,n.L),'du')}},
- {min:18,f(N){const n=pick(N);const pl=ITEMS.find(i=>i.type==='f'&&i.kind==='pl'&&i.base===n.ar);
+ {min:18,f(N){const n=pick(plain(N));if(!n)return null;const pl=ITEMS.find(i=>i.type==='f'&&i.kind==='pl'&&i.base===n.ar);
   return mk(`« Combien de ${n.fr} ? » — ${n.ar}`,'كَمْ '+accI(n.ar)+'؟',shuf(['كَمْ '+n.ar+'؟','كَمْ '+defN(n.ar)+'؟',pl?'كَمْ '+pl.form+'؟':'كَمْ '+genI(n.ar)+'؟','كَمْ '+genI(n.ar)+'؟']),'كَمْ + nom singulier, indéfini, à l\'accusatif (ـًا).',Math.max(18,n.L),'kam')}},
  {min:19,f(){const P=ITEMS.filter(i=>i.type==='f'&&i.kind==='pl'&&i.L<=S.to&&/[ٌُ]$/.test(i.form)).filter(i=>!ADJBASE.has(i.base)).map(i=>({...i,f:FEM.has(i.base)||stem(i.base).endsWith('ة')})).filter(i=>S.to>=20||!i.f);if(!P.length)return null;
   const p=pick(P);const k=Math.random()*8|0;const pg=p.form.endsWith('ٌ')?p.form.replace(/ٌ$/,'ٍ'):p.form.replace(/ُ$/,'َ');const R=p.f?NUM_F:NUM_M,W=p.f?NUM_M:NUM_F;
@@ -73,7 +93,7 @@ const GENS=[
  {min:17,f(){const P=ITEMS.filter(i=>i.type==='f'&&i.kind==='pl'&&i.L>=16&&i.L<=S.to&&i.base!=='راكِبٌ'&&!/ىٰ$/.test(i.form));if(!P.length)return null;let p,a;for(let t=0;t<40;t++){p=pick(P);a=pick(ADJ.filter(x=>x[3]<=S.to));if(adjFits(a,{ar:p.base}))break;a=null}if(!a)return null;
   return mk(`« Les … sont ${fe(a[2])}s » avec ${p.form} (pluriel de ${p.fr}) + ${a[0]}`,defN(p.form)+' '+a[1],shuf([defN(p.form)+' '+a[0],defN(p.form)+' '+def(a[1])+'ُ',p.form+' '+a[1]]),'Pluriel non-humain → adjectif au féminin singulier.',Math.max(17,p.L),'plnh')}},
  {min:22,f(N){const n=pick(N.filter(x=>['obj','veh'].includes(catOf(x.ar))));if(!n)return null;const c=pick(COL);const ok=n.ar+' '+(n.f?c[1]:c[0]);
-  return mk(`« un(e) ${n.fr} ${c[2]} » — ${n.ar}`,ok,shuf([n.ar+' '+(n.f?c[0]:c[1]),n.ar+' '+stem(n.f?c[1]:c[0])+'ٌ',n.ar+' '+(n.f?stem(c[0])+'َةٌ':stem(c[1])+'ٌ')]),'Couleurs : أَفْعَلُ (masc.) / فَعْلاءُ (fém.), jamais de tanwīn.',22,'col')}}
+  return mk(`« un(e) ${n.fr} ${COLF[c[2]]||c[2]} » — ${n.ar}`,ok,shuf([n.ar+' '+(n.f?c[0]:c[1]),n.ar+' '+stem(n.f?c[1]:c[0])+'ٌ',n.ar+' '+(n.f?stem(c[0])+'َةٌ':stem(c[1])+'ٌ')]),'Couleurs : أَفْعَلُ (masc.) / فَعْلاءُ (fém.), jamais de tanwīn.',22,'col')}}
 ];
 function genQ(n){
  const N=nouns();const G=GENS.filter(g=>g.min<=S.to);if(!G.length||N.length<2)return[];

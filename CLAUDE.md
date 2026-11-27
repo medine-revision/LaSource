@@ -127,7 +127,7 @@ docs/CONTENU.md         Format exact des données + comment ajouter/corriger du 
 - `fitOpts()` s'exécute via `requestAnimationFrame` après `show()` et au redimensionnement.
 - Le contenu (traductions, règles, résumés) a été rédigé par Claude à partir du livre (PDF scanné, arabe seul) : **à faire relire par l'équipe pédagogique**. Toute correction de l'utilisateur prime.
 - Mots identiques sans voyelles (من، رجل، امام، انت) : gérés (pas utilisés comme pièges entre eux ; les deux traductions acceptées si voyelles masquées).
-- Questions générées : grammaticalement justes mais combinaisons au hasard → garder les catégories à jour si on ajoute du vocabulaire.
+- Questions générées : elles doivent avoir du **sens** (l'utilisateur a signalé « vers le sac »). Règles en place : `PREPS` (في = lieu/véhicule/contenant, عَلىٰ = surface, مِنْ = lieu, إِلىٰ = lieu/personne), `idafaOk` (`PARTS` : partie → tout, ex. porte → mosquée ; sinon objet/animal → personne), catégories `nature`, `cont`, `surf`, `skip`, `FAMILY` (pas de « deux mères »). Toute nouvelle catégorie de mot doit être rangée dans `CAT`. Vérifier un échantillon (`__gen`) après chaque changement.
 
 ## 10. Idées possibles (non faites)
 - Choix « version française » pour les numéros de page (nécessite la page de début de chaque leçon dans l'édition FR).
@@ -198,5 +198,6 @@ docs/CONTENU.md         Format exact des données + comment ajouter/corriger du 
 | v7 | Harakāt lisibles (Noto Naskh, ≥ 23 px), toujours visibles dans le cours |
 | v8 | Tirage 100 % aléatoire + anti-répétition sur 40 questions |
 | v9 | Projet découpé en fichiers + documentation + outils de test |
+| v10 | Questions générées avec du sens (prépositions, iḍāfa, nature, famille, libellés FR) |
 
 Ajouter une ligne ici à chaque évolution importante.
