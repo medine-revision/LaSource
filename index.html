@@ -1490,7 +1490,7 @@ function home(){
  <div><div class="lbl">Jusqu'à la leçon</div><select id="to">${lessonOpts(S.to)}</select></div></div>
  <div class="lbl">… ou jusqu'à la page du livre (version arabe)</div>
  <div class="stepper"><button type="button" id="pm" aria-label="Page précédente">−</button><input type="number" id="page" inputmode="numeric" min="6" max="124" step="1" placeholder="ex. 45" value="${S.page||''}" aria-label="Page du livre"><button type="button" id="pp" aria-label="Page suivante">+</button><button type="button" id="pok" class="btn" disabled>Valider</button></div>
- <p class="note" style="margin:6px 0 0">Les numéros de page sont ceux de la version arabe d'origine (دروس اللغة العربية). Tu as la version française ? Choisis plutôt la leçon : ce sont les mêmes leçons, mais pas les mêmes pages.</p>
+ <p class="note" style="margin:6px 0 0">Version française du livre ? Choisis plutôt la leçon.</p>
  <p class="hint" id="pgprev" style="margin-top:6px">${S.page?`Page ${S.page} → jusqu'à la leçon ${S.to}`:'Choisis une page puis appuie sur Valider.'}</p>
  <p class="hint">Rien après « ${fmtPrompt(last.t)} » (leçon ${S.to}) n'apparaîtra dans les questions.</p>
  <div class="lbl">Difficulté</div>${seg('diff',[['easy','Facile<small>6 choix</small>'],['medium','Moyen<small>glisser-déposer</small>'],['hard','Difficile<small>tu écris toi-même</small>'],['mix','Mélangé<small>un peu de tout</small>']],'diff')}
@@ -1791,7 +1791,7 @@ function lessonBody(L,openGram){
   ${ph.length?`<details class="sec"><summary>3. Phrases d'exemple <small>${ph.length} phrases</small><span class="c">${CH}</span></summary><div class="in"><table class="v">${ph.map(w=>`<tr><td>${esc(w.fr)}</td><td class="ar" data-say="${esc(stripH(w.ar))}">${esc(showAr(w.ar))}</td></tr>`).join('')}</table></div></details>`:''}`;
 }
 function cours(){
- app.innerHTML=`<p class="muted" style="margin-top:0">Les 23 leçons du Tome 1 (numéros de page de la version arabe d'origine). Ouvre une leçon pour voir son résumé, sa grammaire et son vocabulaire.<span class="sayhint"> Touche un mot arabe pour l'entendre.</span></p>`+D.map(L=>{
+ app.innerHTML=`<p class="muted" style="margin-top:0">Les 23 leçons du Tome 1 (pages de la version arabe). Ouvre une leçon pour voir son résumé, sa grammaire et son vocabulaire.<span class="sayhint"> Touche un mot arabe pour l'entendre.</span></p>`+D.map(L=>{
   const nw=ITEMS.filter(i=>i.L===L.n&&i.type==='w').length;const mine=L.n>=S.from&&L.n<=S.to;
   return `<details class="les${mine?' mine':''}" id="les-${L.n}"><summary><span class="num">${L.n}</span><span><b>${fmtPrompt(L.t)}</b><br><span class="muted">Page ${L.p} · ${nw} mots · ${L.g.length} règle${L.g.length>1?'s':''}</span></span><span class="c">${CH}</span></summary><div class="body">
   ${lessonBody(L,false)}
