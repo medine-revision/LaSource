@@ -8,7 +8,7 @@ $('#tab-train').onclick=()=>tab('train');$('#tab-hist').onclick=()=>tab('hist');
 
 const inRange=it=>it.L>=S.from&&it.L<=S.to;
 function pool(){const m=S.mode;return ITEMS.filter(it=>inRange(it)&&(m==='mix'||(m==='words'&&it.type==='w')||(m==='phrases'&&it.type==='p')||(m==='grammar'&&(it.type==='g'||it.type==='f'))))}
-const lessonOpts=sel=>D.map(L=>`<option value="${L.n}" ${L.n===sel?'selected':''}>Leçon ${L.n} — p. ${L.p}</option>`).join('');
+const lessonOpts=sel=>D.map(L=>`<option value="${L.n}" ${L.n===sel?'selected':''}>Leçon ${L.n}</option>`).join('');
 const seg=(key,opts,cls='')=>`<div class="seg ${cls}" data-key="${key}">${opts.map(([v,l])=>`<button type="button" data-v="${v}" aria-pressed="${String(S[key])===String(v)}">${l}</button>`).join('')}</div>`;
 const DIFF={mix:'Mélangé',easy:'Facile',medium:'Moyen',hard:'Difficile'};
 const MODE={mix:'Tout',words:'Mots',phrases:'Phrases',grammar:'Grammaire'};
@@ -37,12 +37,13 @@ function homeView(){
  const last=D.find(L=>L.n===S.to);
  app.innerHTML=heroCard()+`<section class="card">
  <h2>Jusqu'où as-tu étudié ?</h2>
- <div class="row"><div><div class="lbl">De la leçon</div><select id="from">${lessonOpts(S.from)}</select></div>
- <div><div class="lbl">Jusqu'à la leçon</div><select id="to">${lessonOpts(S.to)}</select></div></div>
- <div class="lbl">… ou jusqu'à la page du livre (version arabe)</div>
+ ${seg('pick',[['lesson','Par leçon'],['page','Page précise']])}
+ ${S.pick==='page'?`<div class="lbl">Jusqu'à la page du livre (version arabe)</div>
  <div class="stepper"><button type="button" id="pm" aria-label="Page précédente">−</button><input type="number" id="page" inputmode="numeric" min="6" max="124" step="1" placeholder="ex. 45" value="${S.page||''}" aria-label="Page du livre"><button type="button" id="pp" aria-label="Page suivante">+</button><button type="button" id="pok" class="btn" disabled>Valider</button></div>
  <p class="note" style="margin:6px 0 0">Version française du livre ? Choisis plutôt la leçon.</p>
- <p class="hint" id="pgprev" style="margin-top:6px">${S.page?`Page ${S.page} → jusqu'à la leçon ${S.to}`:'Choisis une page puis appuie sur Valider.'}</p>
+ <p class="hint" id="pgprev" style="margin-top:6px">${S.page?`Page ${S.page} → jusqu'à la leçon ${S.to}`:'Choisis une page puis appuie sur Valider.'}</p>`
+ :`<div class="row"><div><div class="lbl">De la leçon</div><select id="from">${lessonOpts(S.from)}</select></div>
+ <div><div class="lbl">Jusqu'à la leçon</div><select id="to">${lessonOpts(S.to)}</select></div></div>`}
  <p class="hint">Rien après « ${fmtPrompt(last.t)} » (leçon ${S.to}) n'apparaîtra dans les questions.</p>
  <div class="lbl">Difficulté</div>${seg('diff',[['easy','Facile<small>6 choix</small>'],['medium','Moyen<small>glisser-déposer</small>'],['hard','Difficile<small>tu écris toi-même</small>'],['mix','Mélangé<small>un peu de tout</small>']],'diff')}
  <div class="lbl">Que réviser ?</div>${seg('mode',[['mix','Tout mélangé'],['words','Mots'],['phrases','Phrases'],['grammar','Grammaire']])}
@@ -54,17 +55,20 @@ function homeView(){
  </section>`+profileCard();
  wireProfile();
  app.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{S.to=+b.dataset.d;S.page=null;if(S.from>S.to)S.from=S.to;save();homeView()});
+ if(S.pick!=='page'){
  $('#from').onchange=e=>{S.from=+e.target.value;S.page=null;if(S.to<S.from)S.to=S.from;save();homeView()};
  $('#to').onchange=e=>{S.to=+e.target.value;S.page=null;if(S.from>S.to)S.from=S.to;save();homeView()};
+ }else{
  const lesOf=p=>{let n=1;D.forEach(L=>{if(L.p<=p)n=L.n});return n};
  const pg=$('#page'),ok=$('#pok'),prev=$('#pgprev');
  const preview=()=>{const v=+pg.value;const valid=v>=6&&v<=124;ok.disabled=!valid||v===S.page;
   prev.textContent=valid?(v===S.page?`Page ${v} → jusqu'à la leçon ${S.to}`:`Page ${v} → leçon ${lesOf(v)} · appuie sur Valider`):(pg.value?'Page entre 6 et 124':'Choisis une page puis appuie sur Valider.')};
  const bump=d=>{const base=+pg.value||S.page||D.find(L=>L.n===S.to).p;pg.value=Math.max(6,Math.min(124,base+d));preview()};
- const apply=()=>{const v=+pg.value;if(!(v>=6&&v<=124))return;S.page=v;S.to=lesOf(v);if(S.from>S.to)S.from=1;save();homeView()};
+ const apply=()=>{const v=+pg.value;if(!(v>=6&&v<=124))return;S.page=v;S.to=lesOf(v);S.from=1;save();homeView()};
  pg.addEventListener('input',preview);
  pg.addEventListener('keydown',e=>{if(e.key==='ArrowUp'||e.key==='ArrowDown'){e.preventDefault();bump(e.key==='ArrowUp'?1:-1)}else if(e.key==='Enter'){e.preventDefault();apply()}});
  $('#pm').onclick=()=>bump(-1);$('#pp').onclick=()=>bump(1);ok.onclick=apply;
+ }
  app.querySelectorAll('.seg').forEach(g=>g.onclick=e=>{const b=e.target.closest('button');if(!b)return;const k=g.dataset.key;S[k]=k==='count'?+b.dataset.v:b.dataset.v;save();homeView()});
  $('#har').onchange=e=>{S.har=e.target.checked;save()};
  $('#go').onclick=()=>start(P);

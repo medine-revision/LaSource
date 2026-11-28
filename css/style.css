@@ -281,3 +281,5 @@ details.pf .login{margin-top:6px}
 .gopage #cpok{min-height:46px;padding:8px 16px;font-size:15px;color:#fff;background:var(--tile)}
 details.les.hit{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 25%,transparent)}
 html{scroll-padding-top:12px}
+
+.seg[data-key=pick]{margin-bottom:6px}

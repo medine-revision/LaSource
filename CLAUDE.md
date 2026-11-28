@@ -26,7 +26,7 @@
 8. **Aucun texte ne doit déborder** d'un bouton : `fitOpts()` réduit la taille puis passe à la ligne.
 9. **Design** : couleurs de La Source (bleu nuit `#17223a`, bleu `#4fa6ee`), dégradés doux. **Pas de motifs/symboles** (étoiles, vagues : refusés par l'utilisateur). Mode jour **bien contrasté** + mode nuit.
 10. **Pages** : les numéros de page sont ceux de la **version arabe d'origine**. La version française (même auteur, mêmes leçons) a d'autres pages → conseiller de choisir la leçon. Note courte uniquement.
-11. **Choix de page** : boutons −/+ et flèches **sans recharger**, application seulement via **Valider** (ou Entrée).
+11. **« Jusqu'où as-tu étudié ? »** : bouton **Par leçon / Page précise** (`S.pick`). Par leçon = menus De/Jusqu'à. Page précise = boutons −/+ et flèches **sans recharger**, application seulement via **Valider** (ou Entrée) ; la page est convertie en leçon (granularité = la leçon, voir §9).
 12. **Prénom facultatif et discret** : on révise directement sans rien taper (profil invité `GP`). Un petit lien en bas de l'accueil/historique « Plusieurs personnes sur cet appareil ? Ajouter mon prénom » sert seulement aux appareils partagés. Ne pas le remettre en avant.
 13. Toujours **pousser sur `main`** après une modification demandée (l'utilisateur veut voir la dernière version en ligne directement).
 
@@ -69,7 +69,7 @@ docs/CONTENU.md         Format exact des données + comment ajouter/corriger du 
 |---|---|---|
 | `D`, `SUM` | data | contenu brut |
 | `ITEMS` | items.js | toutes les questions : `{id,type,L,…}` — type `w` mot, `p` phrase, `f` forme, `g` grammaire |
-| `S` | state.js | réglages : `from,to,mode,dir,diff,count,har,kb,pckb,page,cpage` (`cpage` = dernière page cherchée dans le Cours) |
+| `S` | state.js | réglages : `pick` (`lesson`/`page`), `from,to,mode,dir,diff,count,har,kb,pckb,page,cpage` (`cpage` = dernière page cherchée dans le Cours) |
 | `ME` / `GP` / `CUR()` | state.js | profil avec prénom (`null` si aucun) / profil invité / profil utilisé (`ME||GP`) |
 | `DB` | state.js | base claude.ai (`null` sur GitHub Pages) |
 | `Q, qi, score, errs, streak` | session.js | série en cours |
@@ -127,6 +127,7 @@ docs/CONTENU.md         Format exact des données + comment ajouter/corriger du 
 - Les animations utilisent `#app>*{animation:up}` (spécificité d'ID) : pour une autre animation sur un enfant direct de `#app`, préfixer par `#app` (ex. `#app .qcard.win`).
 - `fitOpts()` s'exécute via `requestAnimationFrame` après `show()` et au redimensionnement.
 - Le contenu (traductions, règles, résumés) a été rédigé par Claude à partir du livre (PDF scanné, arabe seul) : **à faire relire par l'équipe pédagogique**. Toute correction de l'utilisateur prime.
+- **Pourquoi par leçon et pas par page** : dans le livre, le vocabulaire et la grammaire d'une leçon sont présentés au début de la leçon ; les pages suivantes sont surtout des exercices. Le contenu du site est donc rangé par leçon ; une page choisie = « jusqu'à la leçon qui contient cette page ».
 - Mots identiques sans voyelles (من، رجل، امام، انت) : gérés (pas utilisés comme pièges entre eux ; les deux traductions acceptées si voyelles masquées).
 - Questions générées : elles doivent avoir du **sens** (l'utilisateur a signalé « vers le sac »). Règles en place : `PREPS` (في = lieu/véhicule/contenant, عَلىٰ = surface, مِنْ = lieu, إِلىٰ = lieu/personne), `idafaOk` (`PARTS` : partie → tout, ex. porte → mosquée ; sinon objet/animal → personne), catégories `nature`, `cont`, `surf`, `skip`, `FAMILY` (pas de « deux mères »). Toute nouvelle catégorie de mot doit être rangée dans `CAT`. Vérifier un échantillon (`__gen`) après chaque changement.
 
@@ -203,5 +204,6 @@ docs/CONTENU.md         Format exact des données + comment ajouter/corriger du 
 | v10 | Questions générées avec du sens (prépositions, iḍāfa, nature, famille, libellés FR) |
 | v11 | Prénom facultatif et discret (lien en bas), historique invité par défaut |
 | v12 | Cours : « Aller à une page du livre » + pages de début–fin de chaque leçon |
+| v13 | Accueil : bouton Par leçon / Page précise |
 
 Ajouter une ligne ici à chaque évolution importante.

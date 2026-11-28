@@ -1,7 +1,7 @@
 /* Réglages (S, sauvés dans localStorage 'm1set'), profil invité (GP, par défaut) et profils par prénom FACULTATIFS (ME), statistiques et historique, synchronisation optionnelle via la base 'db' de claude.ai (DB = null sur GitHub Pages).
    Fichier chargé dans l'ordre défini par index.html : voir CLAUDE.md. */
 /* ---------- état, profils ---------- */
-const S=Object.assign({from:1,to:3,mode:'mix',dir:'both',diff:'mix',count:20,har:true,kb:true,pckb:true},LS.get('m1set',{}));
+const S=Object.assign({pick:'lesson',from:1,to:3,mode:'mix',dir:'both',diff:'mix',count:20,har:true,kb:true,pckb:true},LS.get('m1set',{}));
 if(S.fmt)delete S.fmt;
 const save=()=>LS.set('m1set',S);
 let DB=null,dbState='wait';
