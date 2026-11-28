@@ -34,7 +34,7 @@ async def main():
         pg.on('pageerror', lambda e: problems.append('Erreur JS : ' + str(e)))
         await pg.goto(URL); await pg.wait_for_timeout(700)
         await pg.evaluate('localStorage.clear()'); await pg.reload(); await pg.wait_for_timeout(700)
-        await pg.select_option('#to', '23')
+        await pg.click('#to'); await pg.click('[data-pick="23"]'); await pg.wait_for_timeout(300)
         seen = []
         for diff in ['easy', 'medium', 'hard', 'mix']:
             await pg.click(f'.seg[data-key=diff] button[data-v={diff}]')

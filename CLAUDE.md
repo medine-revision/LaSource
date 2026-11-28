@@ -26,7 +26,7 @@
 8. **Aucun texte ne doit déborder** d'un bouton : `fitOpts()` réduit la taille puis passe à la ligne.
 9. **Design** : couleurs de La Source (bleu nuit `#17223a`, bleu `#4fa6ee`), dégradés doux. **Pas de motifs/symboles** (étoiles, vagues : refusés par l'utilisateur). Mode jour **bien contrasté** + mode nuit.
 10. **Pages** : les numéros de page sont ceux de la **version arabe d'origine**. La version française (même auteur, mêmes leçons) a d'autres pages → conseiller de choisir la leçon. Note courte uniquement.
-11. **« Jusqu'où as-tu étudié ? »** : bouton **Par leçon / Page précise** (`S.pick`). Par leçon = menus De/Jusqu'à, avec le **titre court** (`s`) de la leçon sous chaque menu. Page précise = boutons −/+ et flèches **sans recharger**, application seulement via **Valider** (ou Entrée) ; la page est convertie en leçon (granularité = la leçon, voir §9).
+11. **« Jusqu'où as-tu étudié ? »** : bouton **Par leçon / Page précise** (`S.pick`). Par leçon = deux boutons De/Jusqu'à (numéro + **titre court** `s`) qui ouvrent une **liste en fenêtre** avec les 23 leçons, leurs titres et leurs pages (`pickLesson`). Page précise = boutons −/+ et flèches **sans recharger**, application seulement via **Valider** (ou Entrée) ; la page est convertie en leçon (granularité = la leçon, voir §9).
 12. **Prénom facultatif et discret** : on révise directement sans rien taper (profil invité `GP`). Un petit lien en bas de l'accueil/historique « Plusieurs personnes sur cet appareil ? Ajouter mon prénom » sert seulement aux appareils partagés. Ne pas le remettre en avant.
 13. Toujours **pousser sur `main`** après une modification demandée (l'utilisateur veut voir la dernière version en ligne directement).
 
@@ -146,7 +146,7 @@ docs/CONTENU.md         Format exact des données + comment ajouter/corriger du 
 | `core/generators.js` | morphologie : `stem` (retire tanwīn/voyelle finale), `tStem` (ة→ت), `nom`/`gen`/`genI`/`accI`, `def`/`defN`/`defG` (ajout de ال avec lettres solaires) ; listes `FEM`, `ADJ` [masc, fém, fr, leçon], `COL`, `NOTN` (exclus), `OWN`, `CAT`/`CATS`/`catOf`/`isOpen`, `ADJOK`/`adjFits`/`pairNA`, `ADJBASE`, `NUM_M`/`NUM_F`, `PRON`, `VERB`, `SUF`/`withSuf`, `nouns()`, `mk()` (valide une question générée), `GENS` (liste des générateurs `{min,f(N)}`), `genQ(n)` |
 | `core/state.js` | `S`, `save()`, `DB`, `dbState`, `ME`, `GP`, `CUR()`, `keyOf(nom)`, `STATS()`, `persist()` (local + DB), `login(nom)`, `logout()`, `KNOWN`/`loadNames()` |
 | `ui/theme-audio.js` | `theme`, `applyTheme()`, `showAr()`, `speak()`, `sayBtn()`, `loadVoices()` (ajoute/retire la classe `noar` sur body) |
-| `ui/home.js` | `view`, `tab(v)`, `render()`, `inRange(item)`, `pool()` (items filtrés par leçons + mode), `lessonOpts`, `seg()` (boutons de choix), `DIFF`, `MODE`, `profileCard()` (lien discret / ligne « Profil : … · changer »), `wireProfile()`, `heroCard()`, `homeView()`, `historyView()` |
+| `ui/home.js` | `view`, `tab(v)`, `render()`, `inRange(item)`, `pool()` (items filtrés par leçons + mode), `lessonOpts`, `seg()` (boutons de choix), `DIFF`, `MODE`, `lessonBtn(id,n)`, `pickLesson('from'|'to')`, `profileCard()` (lien discret / ligne « Profil : … · changer »), `wireProfile()`, `heroCard()`, `homeView()`, `historyView()` |
 | `quiz/build.js` | `dirPick`, `frSet`, `distract(it,champ,n)`, `fakeForms(it)`, `letterToks(ans)`, `SWAP`/`PART`/`mutations(ok)`, `fillOpts(ok,bad,n,pool)`, `levelFor()`, `build(it)` → objet question `{it,kind,ask,prompt,pAr,ans,target,oAr,opts,toks,six,keepHar,lv,ex}`, `check(q,saisie)` → 1 / 0.5 / 0 |
 | `quiz/keyboard.js` | `KB_ROWS`, `KB_EXTRA`, `HARK`, `CODE`/`SCODE` (code physique → lettre arabe, Maj = voyelles), `isTouch`, `insert`, `backspace`, `kbHTML()`, `wireKb(inp,submit)` |
 | `quiz/dnd.js` | `dnd(q)` → `{get(),clear()}` (pointer events, tap = ajouter/retirer) |
@@ -207,5 +207,6 @@ docs/CONTENU.md         Format exact des données + comment ajouter/corriger du 
 | v12 | Cours : « Aller à une page du livre » + pages de début–fin de chaque leçon |
 | v13 | Accueil : bouton Par leçon / Page précise |
 | v14 | Titres courts des leçons sous les menus, « Mélangé » en premier |
+| v15 | Choix de leçon par liste avec tous les titres visibles avant de choisir |
 
 Ajouter une ligne ici à chaque évolution importante.

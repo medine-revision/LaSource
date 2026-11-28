@@ -8,7 +8,22 @@ $('#tab-train').onclick=()=>tab('train');$('#tab-hist').onclick=()=>tab('hist');
 
 const inRange=it=>it.L>=S.from&&it.L<=S.to;
 function pool(){const m=S.mode;return ITEMS.filter(it=>inRange(it)&&(m==='mix'||(m==='words'&&it.type==='w')||(m==='phrases'&&it.type==='p')||(m==='grammar'&&(it.type==='g'||it.type==='f'))))}
-const lessonOpts=sel=>D.map(L=>`<option value="${L.n}" ${L.n===sel?'selected':''}>Leçon ${L.n}</option>`).join('');
+/* Choix de leçon : un bouton qui montre numéro + titre court, et une liste en fenêtre avec TOUS les titres visibles. */
+const lessonBtn=(id,n)=>{const L=D.find(x=>x.n===n);return `<button type="button" class="lpick" id="${id}" aria-haspopup="dialog"><span class="num">${n}</span><span class="lt"><b>Leçon ${n}</b><small>${fmtPrompt(L.s)}</small></span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>`};
+function pickLesson(which){
+ const cur=which==='from'?S.from:S.to;
+ const sh=document.createElement('div');sh.className='sheet';sh.setAttribute('role','dialog');sh.setAttribute('aria-modal','true');
+ sh.innerHTML=`<div class="panel"><div class="ph"><div style="flex:1"><b>${which==='from'?'De la leçon':'Jusqu\'à la leçon'}</b><div class="muted">Touche une leçon pour la choisir</div></div><button class="iconbtn x" type="button" aria-label="Fermer">✕</button></div>
+ <div class="pb"><div class="llist">${D.map(L=>`<button type="button" class="lrow${L.n===cur?' on':''}" data-pick="${L.n}"><span class="num">${L.n}</span><span class="lt"><b>${fmtPrompt(L.s)}</b><small>Pages ${L.p}–${pageEnd(L)}</small></span></button>`).join('')}</div></div></div>`;
+ document.body.appendChild(sh);document.body.style.overflow='hidden';
+ const close=()=>{sh.classList.add('out');document.body.style.overflow='';setTimeout(()=>sh.remove(),200);document.removeEventListener('keydown',k)};
+ const k=e=>{if(e.key==='Escape')close()};document.addEventListener('keydown',k);
+ sh.onclick=e=>{const b=e.target.closest('[data-pick]');
+  if(b){const n=+b.dataset.pick;if(which==='from'){S.from=n;if(S.to<n)S.to=n}else{S.to=n;if(S.from>n)S.from=n}S.page=null;save();close();homeView();return}
+  if(e.target===sh||e.target.closest('.x'))close()};
+ const on=sh.querySelector('.lrow.on');if(on)on.scrollIntoView({block:'center'});
+ sh.querySelector('.x').focus();
+}
 const seg=(key,opts,cls='')=>`<div class="seg ${cls}" data-key="${key}">${opts.map(([v,l])=>`<button type="button" data-v="${v}" aria-pressed="${String(S[key])===String(v)}">${l}</button>`).join('')}</div>`;
 const DIFF={mix:'Mélangé',easy:'Facile',medium:'Moyen',hard:'Difficile'};
 const MODE={mix:'Tout',words:'Mots',phrases:'Phrases',grammar:'Grammaire'};
@@ -42,8 +57,8 @@ function homeView(){
  <div class="stepper"><button type="button" id="pm" aria-label="Page précédente">−</button><input type="number" id="page" inputmode="numeric" min="6" max="124" step="1" placeholder="ex. 45" value="${S.page||''}" aria-label="Page du livre"><button type="button" id="pp" aria-label="Page suivante">+</button><button type="button" id="pok" class="btn" disabled>Valider</button></div>
  <p class="note" style="margin:6px 0 0">Version française du livre ? Choisis plutôt la leçon.</p>
  <p class="hint" id="pgprev" style="margin-top:6px">${S.page?`Page ${S.page} → jusqu'à la leçon ${S.to}`:'Choisis une page puis appuie sur Valider.'}</p>`
- :`<div class="row"><div><div class="lbl">De la leçon</div><select id="from">${lessonOpts(S.from)}</select><p class="ltitle">${fmtPrompt(D.find(L=>L.n===S.from).s)}</p></div>
- <div><div class="lbl">Jusqu'à la leçon</div><select id="to">${lessonOpts(S.to)}</select><p class="ltitle">${fmtPrompt(D.find(L=>L.n===S.to).s)}</p></div></div>`}
+ :`<div class="row"><div><div class="lbl">De la leçon</div>${lessonBtn('from',S.from)}</div>
+ <div><div class="lbl">Jusqu'à la leçon</div>${lessonBtn('to',S.to)}</div></div>`}
  <p class="hint">Rien après la leçon ${S.to} n'apparaîtra dans les questions.</p>
  <div class="lbl">Difficulté</div>${seg('diff',[['mix','Mélangé<small>un peu de tout</small>'],['easy','Facile<small>6 choix</small>'],['medium','Moyen<small>glisser-déposer</small>'],['hard','Difficile<small>tu écris toi-même</small>']],'diff')}
  <div class="lbl">Que réviser ?</div>${seg('mode',[['mix','Tout mélangé'],['words','Mots'],['phrases','Phrases'],['grammar','Grammaire']])}
@@ -56,8 +71,8 @@ function homeView(){
  wireProfile();
  app.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{S.to=+b.dataset.d;S.page=null;if(S.from>S.to)S.from=S.to;save();homeView()});
  if(S.pick!=='page'){
- $('#from').onchange=e=>{S.from=+e.target.value;S.page=null;if(S.to<S.from)S.to=S.from;save();homeView()};
- $('#to').onchange=e=>{S.to=+e.target.value;S.page=null;if(S.from>S.to)S.from=S.to;save();homeView()};
+ $('#from').onclick=()=>pickLesson('from');
+ $('#to').onclick=()=>pickLesson('to');
  }else{
  const lesOf=p=>{let n=1;D.forEach(L=>{if(L.p<=p)n=L.n});return n};
  const pg=$('#page'),ok=$('#pok'),prev=$('#pgprev');
