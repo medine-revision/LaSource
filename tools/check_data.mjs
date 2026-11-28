@@ -15,6 +15,7 @@ const lines = s => (s || '').trim().split('\n').filter(Boolean);
 D.forEach((L, idx) => {
   if (L.n !== idx + 1) issues.push(`Leçon à l'index ${idx} a n=${L.n} (attendu ${idx + 1})`);
   if (idx && L.p < D[idx - 1].p) issues.push(`Leçon ${L.n} : page ${L.p} avant la page de la leçon précédente`);
+  if (!L.s) issues.push(`Leçon ${L.n} : pas de titre court (s)`);
   if (!SUM[L.n]) issues.push(`Leçon ${L.n} : pas de résumé dans summaries.js`);
   if (!L.g || !L.g.length) issues.push(`Leçon ${L.n} : aucune règle de grammaire (g)`);
   lines(L.w).forEach(l => { counts.w++; const a = l.split('|'); if (a.length !== 2 || !a[0] || !a[1]) issues.push(`Leçon ${L.n} mot mal formé : ${l}`); else { if (/[a-z]/i.test(a[0])) issues.push(`Leçon ${L.n} lettres latines côté arabe : ${l}`); (seen[nAr(a[0])] ||= []).push(`L${L.n} ${a[1]}`); } });

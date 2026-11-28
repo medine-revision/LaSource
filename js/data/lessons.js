@@ -1,7 +1,8 @@
 /* Contenu des 23 leçons du Tome 1 de Médine. Format documenté dans docs/CONTENU.md.
-   n = numéro, p = page (version arabe), t = titre, w = vocabulaire (« arabe|français/alt »), ph = phrases, f = formes (« singulier|forme|français|pl|du|fe »), g = règles [titre, html, [[arabe, français]]], q = QCM [question, bonne, faux1, faux2, faux3, explication]. */
+   n = numéro, p = page (version arabe), t = titre (Cours), s = titre court (accueil, sans ponctuation arabe compliquée), w = vocabulaire (« arabe|français/alt »), ph = phrases, f = formes (« singulier|forme|français|pl|du|fe »), g = règles [titre, html, [[arabe, français]]], q = QCM [question, bonne, faux1, faux2, faux3, explication]. */
 const D=[
 {n:1,p:6,t:"Ceci — هٰذا, ما, مَنْ, أَ",
+s:"Ceci (هٰذا) et les premières questions",
 w:`هٰذا|ceci/ce/celui-ci/c'est
 ما|quoi/que/qu'est-ce que
 مَنْ|qui
@@ -54,6 +55,7 @@ q:[["« Qui est-ce ? » (en montrant un homme)","مَنْ هٰذا؟","ما هٰ
 ["On emploie ما هٰذا ؟ pour…","un objet ou un animal","une personne","un lieu","une question oui / non","ما = quoi ; مَنْ = qui."]]},
 
 {n:2,p:12,t:"Cela — ذٰلِكَ",
+s:"Cela (ذٰلِكَ)",
 w:`ذٰلِكَ|cela/celui-là/ça
 حَجَرٌ|pierre
 سُكَّرٌ|sucre
@@ -74,6 +76,7 @@ q:[["« Celui-là est un imam »","ذٰلِكَ إِمامٌ.","هٰذا إِم�
 ["« Ceci est du sucre et cela est du lait »","هٰذا سُكَّرٌ وَذٰلِكَ لَبَنٌ.","ذٰلِكَ سُكَّرٌ وَهٰذا لَبَنٌ.","هٰذا لَبَنٌ وَذٰلِكَ سُكَّرٌ.","هٰذا سُكَّرٌ وَهٰذا لَبَنٌ.","Ceci = هٰذا (proche), cela = ذٰلِكَ."]]},
 
 {n:3,p:14,t:"L'article ال et la phrase nominale",
+s:"L'article ال et la phrase nominale",
 w:`مَكْسُورٌ|cassé
 مَفْتُوحٌ|ouvert
 جالِسٌ|assis
@@ -132,6 +135,7 @@ q:[["« La porte est ouverte »","البابُ مَفْتُوحٌ.","بابٌ م
 ["Dans السُّكَّرُ حُلْوٌ, l'attribut (khabar) est…","حُلْوٌ","السُّكَّرُ","ال","il n'y en a pas","Le khabar est la partie indéfinie qui informe sur le sujet."]]},
 
 {n:4,p:21,t:"Prépositions et génitif",
+s:"Prépositions et génitif",
 w:`في|dans/en/à
 عَلىٰ|sur
 أَيْنَ|où
@@ -183,6 +187,7 @@ q:[["« dans la maison »","في البَيْتِ","في البَيْتُ","في
 ["« Elle est dans la cuisine »","هِيَ في المَطْبَخِ.","هُوَ في المَطْبَخِ.","هِيَ في المَطْبَخُ.","هِيَ عَلىٰ المَطْبَخِ.","هِيَ = elle ; في = dans."]]},
 
 {n:5,p:27,t:"L'annexion (iḍāfa)",
+s:"L'annexion (iḍāfa)",
 w:`دَفْتَرٌ|cahier
 حَقِيبَةٌ|sac/cartable/valise
 تَحْتَ|sous
@@ -224,6 +229,7 @@ q:[["« La maison de l'enseignant »","بَيْتُ المُدَرِّسِ","ا�
 ["« La clé de la voiture »","مِفْتاحُ السَّيّارَةِ","المِفْتاحُ السَّيّارَةِ","مِفْتاحٌ السَّيّارَةُ","مِفْتاحُ سَيّارَةٌ","Iḍāfa : مِفْتاحُ + السَّيّارَةِ."]]},
 
 {n:6,p:33,t:"Le féminin — هٰذِهِ",
+s:"Le féminin (هٰذِهِ)",
 w:`هٰذِهِ|celle-ci/ceci (féminin)
 بِنْتٌ|fille
 أُخْتٌ|sœur
@@ -275,6 +281,7 @@ q:[["« C'est une voiture »","هٰذِهِ سَيّارَةٌ.","هٰذا سَ�
 ["Pronom pour النّافِذَةُ","هِيَ","هُوَ","هٰذا","ما","نافِذَةٌ est féminin."]]},
 
 {n:7,p:39,t:"Cela (féminin) — تِلْكَ",
+s:"Cela au féminin (تِلْكَ)",
 w:`تِلْكَ|celle-là/cela (féminin)
 مُمَرِّضَةٌ|infirmière
 طَبِيبَةٌ|médecin (femme)/doctoresse
@@ -300,6 +307,7 @@ q:[["« Celle-là est une infirmière »","تِلْكَ مُمَرِّضَةٌ."
 ["« Est-ce une poule, là-bas ? »","أَتِلْكَ دَجاجَةٌ؟","أَذٰلِكَ دَجاجَةٌ؟","ما تِلْكَ دَجاجَةٌ؟","أَهٰذِهِ دَجاجَةٌ؟","أَ + تِلْكَ."]]},
 
 {n:8,p:42,t:"هٰذا الـ…, لِـ, أَمامَ / خَلْفَ",
+s:"« Cet homme », « à qui ? », devant / derrière",
 w:`لِمَنْ|à qui
 لِـ|à/pour (appartenance)
 أَمامَ|devant
@@ -338,6 +346,7 @@ q:[["« Cet homme est médecin »","هٰذا الرَّجُلُ طَبِيبٌ."
 ["« cette voiture » (sujet)","هٰذِهِ السَّيّارَةُ","هٰذِهِ سَيّارَةٌ","هٰذا السَّيّارَةُ","السَّيّارَةُ هٰذا","Féminin + défini."]]},
 
 {n:9,p:47,t:"L'adjectif épithète",
+s:"L'adjectif épithète",
 w:`لُغَةٌ|langue
 العَرَبِيَّةُ|l'arabe (langue)
 الإِنْجِلِيزِيَّةُ|l'anglais (langue)
@@ -389,6 +398,7 @@ q:[["« le nouvel étudiant »","الطّالِبُ الجَدِيدُ","الط�
 ["« l'homme qui est sorti » : quel relatif ?","الَّذِي","مَنْ","ما","هُوَ","الَّذِي après un nom masculin défini."]]},
 
 {n:10,p:54,t:"Les pronoms suffixes",
+s:"Les pronoms suffixes (mon, ton, son)",
 w:`اسْمِي|mon nom
 اسْمُكَ|ton nom
 أَبٌ|père
@@ -431,6 +441,7 @@ q:[["« ton livre » (à un garçon)","كِتابُكَ","كِتابُكِ","ا�
 ["« ton frère » (à une fille)","أَخُوكِ","أَخُوكَ","أَخِيكِ","أَخُكِ","ـكِ = toi (féminin)."]]},
 
 {n:11,p:61,t:"Ma maison — فِيهِ / فِيها",
+s:"Ma maison, « il y a »",
 w:`بَيْتِي|ma maison
 فِيهِ|il y a (dedans)/en lui
 فِيها|il y a (dedans)/en elle
@@ -456,6 +467,7 @@ q:[["« Il y a un jardin dans la maison »","في البَيْتِ حَدِيق�
 ["« J'aime ma mère »","أُحِبُّ أُمِّي.","أُحِبُّ الأُمِّي.","أُحِبُّ أُمُّكَ.","أَنا أُمِّي أُحِبُّ.","أُمّ + ـِي = أُمِّي."]]},
 
 {n:12,p:63,t:"Le verbe au féminin, الَّتِي, la famille",
+s:"Verbe au féminin, la famille",
 w:`كَيْفَ|comment
 كَيْفَ حالُكَ؟|comment vas-tu ?
 بِخَيْرٍ|bien/en bonne santé
@@ -496,6 +508,7 @@ q:[["« Fatima est sortie »","خَرَجَتْ فاطِمَةُ.","خَرَجَ
 ["« Comment vas-tu ? » (à un homme)","كَيْفَ حالُكَ؟","كَيْفَ حالُكِ؟","أَيْنَ حالُكَ؟","ما حالُكَ كَيْفَ؟","ـكَ pour un homme."]]},
 
 {n:13,p:68,t:"Le pluriel (personnes)",
+s:"Le pluriel des personnes",
 w:`هُمْ|ils/eux
 هُنَّ|elles
 هٰؤُلاءِ|ceux-ci/celles-ci (pluriel)
@@ -583,6 +596,7 @@ q:[["« Ils sont allés »","ذَهَبُوا","ذَهَبْنَ","ذَهَبَ�
 ["« Ces hommes-là sont des ministres »","أُولٰئِكَ الرِّجالُ وُزَراءُ.","تِلْكَ الرِّجالُ وُزَراءُ.","ذٰلِكَ الرِّجالُ وُزَراءُ.","أُولٰئِكَ الرِّجالُ وَزِيرٌ.","Pluriel éloigné de personnes = أُولٰئِكَ."]]},
 
 {n:14,p:82,t:"نَحْنُ / أَنْتُمْ et leurs suffixes",
+s:"Nous et vous",
 w:`نَحْنُ|nous
 أَنْتُمْ|vous (pluriel)
 كُلِّيَّةٌ|faculté
@@ -626,6 +640,7 @@ q:[["« notre maison »","بَيْتُنا","بَيْتُكُمْ","بَيْتُ
 ["Réponse à « السَّلامُ عَلَيْكُمْ »","وَعَلَيْكُمُ السَّلامُ","وَعَلَيْكُمْ سَلامٌ","السَّلامُ عَلَيْنا","أَهْلًا وَعَلَيْكُمْ","On répond وَعَلَيْكُمُ السَّلامُ."]]},
 
 {n:15,p:87,t:"Le féminin pluriel et le passé complet",
+s:"Le passé complet",
 w:`أَنْتُنَّ|vous (féminin pluriel)
 قَبْلَ|avant/il y a
 بَعْدَ|après/dans
@@ -662,6 +677,7 @@ q:[["« Je suis allé »","ذَهَبْتُ","ذَهَبْتَ","ذَهَبَت�
 ["« votre mère » (à des femmes)","أُمُّكُنَّ","أُمُّكُمْ","أُمُّهُنَّ","أُمُّكِ","ـكُنَّ = votre (f pl)."]]},
 
 {n:16,p:92,t:"Le pluriel des non-humains",
+s:"Le pluriel des choses",
 w:`جَبَلٌ|montagne
 بَحْرٌ|mer
 نَهْرٌ|fleuve/rivière
@@ -710,6 +726,7 @@ q:[["« Ce sont des livres »","هٰذِهِ كُتُبٌ.","هٰؤُلاءِ ك
 ["« Les chiens sont sortis »","خَرَجَتِ الكِلابُ.","خَرَجُوا الكِلابُ.","خَرَجْنَ الكِلابُ.","خَرَجَتِ الكِلابَ.","Verbe au féminin singulier ; sujet au nominatif."]]},
 
 {n:17,p:96,t:"Non-humains : adjectifs et démonstratifs",
+s:"Pluriel des choses : adjectifs",
 w:`شَرِكَةٌ|société/entreprise
 مُدِيرُ الشَّرِكَةِ|directeur de la société
 رَخِيصٌ|bon marché/pas cher
@@ -739,6 +756,7 @@ q:[["« des livres neufs »","كُتُبٌ جَدِيدَةٌ","كُتُبٌ ج�
 ["« Il y a beaucoup d'hôtels dans la rue »","في الشّارِعِ فَنادِقُ كَثِيرَةٌ.","في الشّارِعِ فَنادِقٌ كَثِيرَةٌ.","في الشّارِعُ فَنادِقُ كَثِيرَةٌ.","في الشّارِعِ فَنادِقُ كَثِيرُونَ.","فَنادِقُ sans tanwīn, adjectif féminin singulier."]]},
 
 {n:18,p:100,t:"Le duel et كَمْ",
+s:"Le duel et « combien ? »",
 w:`كَمْ|combien
 عِيدٌ|fête
 عِيدُ الفِطْرِ|Aïd al-Fitr (fête de la rupture du jeûne)
@@ -796,6 +814,7 @@ q:[["« Combien de frères as-tu ? »","كَمْ أَخًا لَكَ؟","كَم�
 ["« Ces deux livres sont à moi »","هٰذانِ الكِتابانِ لِي.","هاتانِ الكِتابانِ لِي.","هٰذانِ الكِتابُ لِي.","هٰذانِ الكِتابَيْنِ لِي.","Sujet au nominatif → ـانِ."]]},
 
 {n:19,p:105,t:"Les nombres 3 à 10 (nom masculin)",
+s:"Nombres 3 à 10 (masculin)",
 w:`ثَلاثَةٌ|trois
 أَرْبَعَةٌ|quatre
 خَمْسَةٌ|cinq
@@ -849,6 +868,7 @@ q:[["« trois étudiants »","ثَلاثَةُ طُلّابٍ","ثَلاثُ ط�
 ["« Combien d'étudiants ? »","كَمْ طالِبًا؟","كَمْ طُلّابًا؟","كَمْ طالِبٌ؟","كَمْ الطُّلّابُ؟","كَمْ + singulier accusatif."]]},
 
 {n:20,p:109,t:"Les nombres 3 à 10 (nom féminin)",
+s:"Nombres 3 à 10 (féminin)",
 w:`مَجَلَّةٌ|revue/magazine
 حَرْفٌ|lettre (de l'alphabet)
 إِنْدُونِيسِيا|Indonésie
@@ -878,6 +898,7 @@ q:[["« trois sœurs »","ثَلاثُ أَخَواتٍ","ثَلاثَةُ أَ�
 ["« trois lettres » (حَرْفٌ, masculin)","ثَلاثَةُ حُرُوفٍ","ثَلاثُ حُرُوفٍ","ثَلاثَةُ حَرْفٍ","ثَلاثُ حَرْفٍ","حَرْفٌ est masculin → ثَلاثَةُ."]]},
 
 {n:21,p:114,t:"Lecture : mon école — لٰكِنَّ",
+s:"Lecture : mon école",
 w:`لٰكِنَّ|mais
 واسِعٌ|vaste/spacieux
 لَوْنٌ|couleur
@@ -907,6 +928,7 @@ q:[["« Mais leur religion est une »","وَلٰكِنَّ دِينَهُمْ و
 ["ذاكَ est équivalent à…","ذٰلِكَ","هٰذا","تِلْكَ","هٰذِهِ","ذاكَ = ذٰلِكَ."]]},
 
 {n:22,p:117,t:"Les couleurs et les diptotes",
+s:"Les couleurs et les diptotes",
 w:`أَحْمَرُ|rouge
 أَخْضَرُ|vert
 أَصْفَرُ|jaune
@@ -948,6 +970,7 @@ q:[["« une voiture rouge »","سَيّارَةٌ حَمْراءُ","سَيّا�
 ["« J'ai beaucoup de mouchoirs »","عِنْدِي مَنادِيلُ كَثِيرَةٌ.","عِنْدِي مَنادِيلٌ كَثِيرَةٌ.","عِنْدِي مَنادِيلُ كَثِيرُونَ.","عِنْدِي مِنْدِيلٌ كَثِيرَةٌ.","مَنادِيلُ sans tanwīn + adjectif féminin singulier."]]},
 
 {n:23,p:120,t:"Les diptotes au génitif",
+s:"Les diptotes au génitif",
 w:`هاتِ|donne(-moi)
 مَكَّةُ|La Mecque
 جُدَّةُ|Djeddah

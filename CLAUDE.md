@@ -20,13 +20,13 @@
 2. **Ne jamais montrer de contenu au-delà de la leçon choisie** dans les questions (filtre `S.from`…`S.to`). L'onglet **Cours**, lui, montre **toujours les 23 leçons**.
 3. **Tirage 100 % aléatoire** + **aucune question semblable aux 40 dernières** (voir §6).
 4. **Choix multiple = 6 réponses**, avec des pièges proches (voyelle finale, ال, mots qui se ressemblent).
-5. **Trois niveaux** : Facile (6 choix), Moyen (glisser-déposer mots/lettres), Difficile (écrire), + Mélangé.
+5. **Trois niveaux** : Facile (6 choix), Moyen (glisser-déposer mots/lettres), Difficile (écrire), + Mélangé. Dans chaque liste de choix, l'option « tout / mélangé » est **en premier**.
 6. **Harakāt toujours visibles** dans le Cours, les résumés, les explications et les options de grammaire. La case « Afficher les voyelles » ne concerne **que** les questions de mots/phrases du quiz.
 7. **Lisibilité de l'arabe** : police Noto Naskh Arabic, jamais sous 23 px dans les réponses, interligne ≈ 1.9–2 (sinon les voyelles sont coupées).
 8. **Aucun texte ne doit déborder** d'un bouton : `fitOpts()` réduit la taille puis passe à la ligne.
 9. **Design** : couleurs de La Source (bleu nuit `#17223a`, bleu `#4fa6ee`), dégradés doux. **Pas de motifs/symboles** (étoiles, vagues : refusés par l'utilisateur). Mode jour **bien contrasté** + mode nuit.
 10. **Pages** : les numéros de page sont ceux de la **version arabe d'origine**. La version française (même auteur, mêmes leçons) a d'autres pages → conseiller de choisir la leçon. Note courte uniquement.
-11. **« Jusqu'où as-tu étudié ? »** : bouton **Par leçon / Page précise** (`S.pick`). Par leçon = menus De/Jusqu'à. Page précise = boutons −/+ et flèches **sans recharger**, application seulement via **Valider** (ou Entrée) ; la page est convertie en leçon (granularité = la leçon, voir §9).
+11. **« Jusqu'où as-tu étudié ? »** : bouton **Par leçon / Page précise** (`S.pick`). Par leçon = menus De/Jusqu'à, avec le **titre court** (`s`) de la leçon sous chaque menu. Page précise = boutons −/+ et flèches **sans recharger**, application seulement via **Valider** (ou Entrée) ; la page est convertie en leçon (granularité = la leçon, voir §9).
 12. **Prénom facultatif et discret** : on révise directement sans rien taper (profil invité `GP`). Un petit lien en bas de l'accueil/historique « Plusieurs personnes sur cet appareil ? Ajouter mon prénom » sert seulement aux appareils partagés. Ne pas le remettre en avant.
 13. Toujours **pousser sur `main`** après une modification demandée (l'utilisateur veut voir la dernière version en ligne directement).
 
@@ -132,7 +132,7 @@ docs/CONTENU.md         Format exact des données + comment ajouter/corriger du 
 - Questions générées : elles doivent avoir du **sens** (l'utilisateur a signalé « vers le sac »). Règles en place : `PREPS` (في = lieu/véhicule/contenant, عَلىٰ = surface, مِنْ = lieu, إِلىٰ = lieu/personne), `idafaOk` (`PARTS` : partie → tout, ex. porte → mosquée ; sinon objet/animal → personne), catégories `nature`, `cont`, `surf`, `skip`, `FAMILY` (pas de « deux mères »). Toute nouvelle catégorie de mot doit être rangée dans `CAT`. Vérifier un échantillon (`__gen`) après chaque changement.
 
 ## 10. Idées possibles (non faites)
-- **Ne pas** mettre les pages scannées du livre en ligne (droits d'auteur) : le site montre son propre contenu par leçon.
+- **Ne pas** mettre les pages scannées du livre en ligne (droits d'auteur) : le site montre son propre contenu par leçon. Idée discutée avec l'utilisateur : bouton « Voir le PDF » par leçon → seulement avec l'accord écrit de l'éditeur ou en lien vers une source officielle.
 - Choix « version française » pour les numéros de page (nécessite la page de début de chaque leçon dans l'édition FR).
 - Tome 2 : même format de données (voir docs/CONTENU.md §7).
 - Suivi de classe pour le professeur (nécessiterait une base de données en ligne, ex. Supabase/Firebase).
@@ -206,5 +206,6 @@ docs/CONTENU.md         Format exact des données + comment ajouter/corriger du 
 | v11 | Prénom facultatif et discret (lien en bas), historique invité par défaut |
 | v12 | Cours : « Aller à une page du livre » + pages de début–fin de chaque leçon |
 | v13 | Accueil : bouton Par leçon / Page précise |
+| v14 | Titres courts des leçons sous les menus, « Mélangé » en premier |
 
 Ajouter une ligne ici à chaque évolution importante.

@@ -1,7 +1,7 @@
 /* Démarrage : affiche l'accueil, tente de se connecter à la base claude.ai, recharge le profil mémorisé.
    Fichier chargé dans l'ordre défini par index.html : voir CLAUDE.md. */
 /* Version affichée en bas de page. Mise à jour automatiquement par tools/bump_version.py (avec les ?v= de index.html). */
-const APP_VERSION='2026-11-28-0139';
+const APP_VERSION='2026-11-28-0157';
 {const v=document.getElementById('ver');if(v)v.textContent='Version '+APP_VERSION;}
 /* ---------- démarrage ---------- */
 homeView();

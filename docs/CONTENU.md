@@ -24,7 +24,8 @@ Après toute modification : `node tools/check_data.mjs`.
 |---|---|
 | `n` | numéro de la leçon (1, 2, 3… sans trou) |
 | `p` | page de **début** de la leçon dans la **version arabe** du livre |
-| `t` | titre affiché (peut contenir de l'arabe) |
+| `t` | titre complet (onglet Cours, peut contenir de l'arabe) |
+| `s` | titre **court** pour l'accueil (menus, carte Salam) : surtout en français, un seul mot arabe au plus |
 
 ## 2. Vocabulaire `w` et phrases `ph`
 

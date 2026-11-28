@@ -27,7 +27,7 @@ function wireProfile(){
 }
 function heroCard(){
  const hr=new Date().getHours();const hi=hr<18?'Salam':'Bonsoir';
- return `<section class="hero"><p class="hi">${hi}${ME?' '+esc(ME.name):''}</p><h2>Leçon ${S.from===S.to?S.to:S.from+' à '+S.to}</h2><p class="sub2">${fmtPrompt(D.find(L=>L.n===S.to).t)}</p>
+ return `<section class="hero"><p class="hi">${hi}${ME?' '+esc(ME.name):''}</p><h2>Leçon ${S.from===S.to?S.to:S.from+' à '+S.to}</h2><p class="sub2">${fmtPrompt(D.find(L=>L.n===S.to).s)}</p>
  <div class="dots" role="group" aria-label="Choisir la dernière leçon étudiée">${D.map(L=>`<button type="button" data-d="${L.n}" class="${L.n>=S.from&&L.n<=S.to?'in':L.n<S.from?'past':''}" aria-label="Jusqu'à la leçon ${L.n}" title="Leçon ${L.n}"></button>`).join('')}</div>
  <div class="dots-l"><span>Leçon 1</span><span>Touche un point pour choisir</span><span>23</span></div></section>`;
 }
@@ -42,10 +42,10 @@ function homeView(){
  <div class="stepper"><button type="button" id="pm" aria-label="Page précédente">−</button><input type="number" id="page" inputmode="numeric" min="6" max="124" step="1" placeholder="ex. 45" value="${S.page||''}" aria-label="Page du livre"><button type="button" id="pp" aria-label="Page suivante">+</button><button type="button" id="pok" class="btn" disabled>Valider</button></div>
  <p class="note" style="margin:6px 0 0">Version française du livre ? Choisis plutôt la leçon.</p>
  <p class="hint" id="pgprev" style="margin-top:6px">${S.page?`Page ${S.page} → jusqu'à la leçon ${S.to}`:'Choisis une page puis appuie sur Valider.'}</p>`
- :`<div class="row"><div><div class="lbl">De la leçon</div><select id="from">${lessonOpts(S.from)}</select></div>
- <div><div class="lbl">Jusqu'à la leçon</div><select id="to">${lessonOpts(S.to)}</select></div></div>`}
- <p class="hint">Rien après « ${fmtPrompt(last.t)} » (leçon ${S.to}) n'apparaîtra dans les questions.</p>
- <div class="lbl">Difficulté</div>${seg('diff',[['easy','Facile<small>6 choix</small>'],['medium','Moyen<small>glisser-déposer</small>'],['hard','Difficile<small>tu écris toi-même</small>'],['mix','Mélangé<small>un peu de tout</small>']],'diff')}
+ :`<div class="row"><div><div class="lbl">De la leçon</div><select id="from">${lessonOpts(S.from)}</select><p class="ltitle">${fmtPrompt(D.find(L=>L.n===S.from).s)}</p></div>
+ <div><div class="lbl">Jusqu'à la leçon</div><select id="to">${lessonOpts(S.to)}</select><p class="ltitle">${fmtPrompt(D.find(L=>L.n===S.to).s)}</p></div></div>`}
+ <p class="hint">Rien après la leçon ${S.to} n'apparaîtra dans les questions.</p>
+ <div class="lbl">Difficulté</div>${seg('diff',[['mix','Mélangé<small>un peu de tout</small>'],['easy','Facile<small>6 choix</small>'],['medium','Moyen<small>glisser-déposer</small>'],['hard','Difficile<small>tu écris toi-même</small>']],'diff')}
  <div class="lbl">Que réviser ?</div>${seg('mode',[['mix','Tout mélangé'],['words','Mots'],['phrases','Phrases'],['grammar','Grammaire']])}
  <div class="lbl">Sens de traduction</div>${seg('dir',[['both','Les deux'],['ar-fr','Arabe → Français'],['fr-ar','Français → Arabe']])}
  <div class="lbl">Nombre de questions</div>${seg('count',[[10,'10'],[20,'20'],[40,'40'],[80,'80'],[999,'Tout']])}

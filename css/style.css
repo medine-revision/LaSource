@@ -283,3 +283,7 @@ details.les.hit{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srg
 html{scroll-padding-top:12px}
 
 .seg[data-key=pick]{margin-bottom:6px}
+
+/* Titre court de la leçon sous chaque menu (lisible sur téléphone) */
+.ltitle{margin:6px 2px 0;font-size:13px;line-height:1.35;color:var(--mut);min-height:2.7em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ltitle .ar{font-size:1.15em;line-height:1.3}
