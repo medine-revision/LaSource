@@ -13,14 +13,31 @@ function lessonBody(L,openGram){
   ${fo.length?`<div class="sub">Pluriels, duels et féminins</div><table class="v">${fo.map(w=>`<tr><td>${esc(w.fr)} <span class="muted">(${KIND[w.kind].toLowerCase()})</span></td><td class="ar" data-say="${esc(stripH(w.form))}">${esc((w.base))} ← ${esc((w.form))}</td></tr>`).join('')}</table>`:''}</div></details>
   ${ph.length?`<details class="sec"><summary>3. Phrases d'exemple <small>${ph.length} phrases</small><span class="c">${CH}</span></summary><div class="in"><table class="v">${ph.map(w=>`<tr><td>${esc(w.fr)}</td><td class="ar" data-say="${esc(stripH(w.ar))}">${esc((w.ar))}</td></tr>`).join('')}</table></div></details>`:''}`;
 }
+/* Page du livre (version arabe) → leçon qui la contient, avec ses pages de début et de fin. */
+const pageEnd=L=>{const nx=D.find(x=>x.n===L.n+1);return nx?nx.p-1:124};
+const lessonOfPage=p=>{let L=D[0];D.forEach(x=>{if(x.p<=p)L=x});return L};
 function cours(){
- app.innerHTML=`<p class="muted" style="margin-top:0">Les 23 leçons du Tome 1 (pages de la version arabe). Ouvre une leçon pour voir son résumé, sa grammaire et son vocabulaire.<span class="sayhint"> Touche un mot arabe pour l'entendre.</span></p>`+D.map(L=>{
+ const startP=S.cpage||'';
+ app.innerHTML=`<section class="card gopage"><h2>Aller à une page du livre</h2>
+ <div class="stepper"><button type="button" id="cpm" aria-label="Page précédente">−</button><input type="number" id="cpg" inputmode="numeric" min="6" max="124" placeholder="ex. 45" value="${startP}" aria-label="Page du livre (version arabe)"><button type="button" id="cpp" aria-label="Page suivante">+</button><button type="button" id="cpok" class="btn">Voir</button></div>
+ <p class="hint" id="cpinfo" style="margin-bottom:0">Pages de la version arabe (6 à 124). Version française du livre ? Ouvre plutôt la leçon.</p></section>
+ <p class="muted" style="margin:0 2px 10px">Les 23 leçons du Tome 1. Ouvre une leçon pour voir son résumé, sa grammaire et son vocabulaire.<span class="sayhint"> Touche un mot arabe pour l'entendre.</span></p>`+D.map(L=>{
   const nw=ITEMS.filter(i=>i.L===L.n&&i.type==='w').length;const mine=L.n>=S.from&&L.n<=S.to;
-  return `<details class="les${mine?' mine':''}" id="les-${L.n}"><summary><span class="num">${L.n}</span><span><b>${fmtPrompt(L.t)}</b><br><span class="muted">Page ${L.p} · ${nw} mots · ${L.g.length} règle${L.g.length>1?'s':''}</span></span><span class="c">${CH}</span></summary><div class="body">
+  return `<details class="les${mine?' mine':''}" id="les-${L.n}"><summary><span class="num">${L.n}</span><span><b>${fmtPrompt(L.t)}</b><br><span class="muted">Pages ${L.p}–${pageEnd(L)} · ${nw} mots · ${L.g.length} règle${L.g.length>1?'s':''}</span></span><span class="c">${CH}</span></summary><div class="body">
   ${lessonBody(L,false)}
   <button class="btn lesgo" type="button" data-les="${L.n}">S'entraîner sur cette leçon</button>
   </div></details>`}).join('');
  app.querySelectorAll('[data-les]').forEach(b=>b.onclick=()=>{const n=+b.dataset.les;S.from=n;S.to=n;S.page=null;save();tab('train')});
+ const inp=$('#cpg'),info=$('#cpinfo');
+ const bump=d=>{inp.value=Math.max(6,Math.min(124,(+inp.value||S.cpage||6)+d))};
+ const go=()=>{const v=+inp.value;if(!(v>=6&&v<=124)){info.textContent='Choisis une page entre 6 et 124.';return}
+  S.cpage=v;save();const L=lessonOfPage(v);
+  app.querySelectorAll('details.les').forEach(d=>{d.open=false;d.classList.remove('hit')});
+  const d=$('#les-'+L.n);d.open=true;d.classList.add('hit');const g=d.querySelector('details.sec');if(g)g.open=true;
+  info.innerHTML=`Page ${v} → <b>leçon ${L.n}</b> (pages ${L.p} à ${pageEnd(L)}).`;
+  d.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})};
+ $('#cpm').onclick=()=>bump(-1);$('#cpp').onclick=()=>bump(1);$('#cpok').onclick=go;
+ inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();go()}else if(e.key==='ArrowUp'||e.key==='ArrowDown'){e.preventDefault();bump(e.key==='ArrowUp'?1:-1)}});
 }
 function openSheet(n){
  const L=D.find(x=>x.n===n);if(!L)return;

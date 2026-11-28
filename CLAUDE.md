@@ -69,7 +69,7 @@ docs/CONTENU.md         Format exact des données + comment ajouter/corriger du 
 |---|---|---|
 | `D`, `SUM` | data | contenu brut |
 | `ITEMS` | items.js | toutes les questions : `{id,type,L,…}` — type `w` mot, `p` phrase, `f` forme, `g` grammaire |
-| `S` | state.js | réglages : `from,to,mode,dir,diff,count,har,kb,pckb,page` |
+| `S` | state.js | réglages : `from,to,mode,dir,diff,count,har,kb,pckb,page,cpage` (`cpage` = dernière page cherchée dans le Cours) |
 | `ME` / `GP` / `CUR()` | state.js | profil avec prénom (`null` si aucun) / profil invité / profil utilisé (`ME||GP`) |
 | `DB` | state.js | base claude.ai (`null` sur GitHub Pages) |
 | `Q, qi, score, errs, streak` | session.js | série en cours |
@@ -131,6 +131,7 @@ docs/CONTENU.md         Format exact des données + comment ajouter/corriger du 
 - Questions générées : elles doivent avoir du **sens** (l'utilisateur a signalé « vers le sac »). Règles en place : `PREPS` (في = lieu/véhicule/contenant, عَلىٰ = surface, مِنْ = lieu, إِلىٰ = lieu/personne), `idafaOk` (`PARTS` : partie → tout, ex. porte → mosquée ; sinon objet/animal → personne), catégories `nature`, `cont`, `surf`, `skip`, `FAMILY` (pas de « deux mères »). Toute nouvelle catégorie de mot doit être rangée dans `CAT`. Vérifier un échantillon (`__gen`) après chaque changement.
 
 ## 10. Idées possibles (non faites)
+- **Ne pas** mettre les pages scannées du livre en ligne (droits d'auteur) : le site montre son propre contenu par leçon.
 - Choix « version française » pour les numéros de page (nécessite la page de début de chaque leçon dans l'édition FR).
 - Tome 2 : même format de données (voir docs/CONTENU.md §7).
 - Suivi de classe pour le professeur (nécessiterait une base de données en ligne, ex. Supabase/Firebase).
@@ -149,7 +150,7 @@ docs/CONTENU.md         Format exact des données + comment ajouter/corriger du 
 | `quiz/keyboard.js` | `KB_ROWS`, `KB_EXTRA`, `HARK`, `CODE`/`SCODE` (code physique → lettre arabe, Maj = voyelles), `isTouch`, `insert`, `backspace`, `kbHTML()`, `wireKb(inp,submit)` |
 | `quiz/dnd.js` | `dnd(q)` → `{get(),clear()}` (pointer events, tap = ajouter/retirer) |
 | `quiz/session.js` | `Q`,`qi`,`score`,`errs`,`answered`,`nAns`,`streak`, `RECENT_N`, `recKey`, `simKey`, `draw(pool,n)`, `markSeen(it)`, `start(P,liste?)`, `rec(it,ok)`, `fitOpts()`, `show()`, `fmtPrompt(txt)`, `done(q,res,saisie)`, `next()`, `finish()` |
-| `ui/cours.js` | `CH` (chevron SVG), `lessonBody(L,grammaireOuverte)`, `cours()`, `openSheet(n)`, `gloss()`/`GLOSS`, `SUFX`, `glossWord(mot)` (mot à mot), `whyHTML(q)` |
+| `ui/cours.js` | `CH` (chevron SVG), `pageEnd(L)`, `lessonOfPage(p)`, `lessonBody(L,grammaireOuverte)`, `cours()` (encadré « Aller à une page du livre » : −/+/Voir → ouvre la leçon qui contient la page, avec la grammaire dépliée), `openSheet(n)`, `gloss()`/`GLOSS`, `SUFX`, `glossWord(mot)` (mot à mot), `whyHTML(q)` |
 | `main.js` | `APP_VERSION`, démarrage (connexion DB, profil mémorisé `m1me`) |
 
 ## 12. Recettes (comment faire…)
@@ -201,5 +202,6 @@ docs/CONTENU.md         Format exact des données + comment ajouter/corriger du 
 | v9 | Projet découpé en fichiers + documentation + outils de test |
 | v10 | Questions générées avec du sens (prépositions, iḍāfa, nature, famille, libellés FR) |
 | v11 | Prénom facultatif et discret (lien en bas), historique invité par défaut |
+| v12 | Cours : « Aller à une page du livre » + pages de début–fin de chaque leçon |
 
 Ajouter une ligne ici à chaque évolution importante.
