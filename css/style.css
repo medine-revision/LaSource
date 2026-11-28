@@ -268,3 +268,10 @@ details.les.mine{border-color:var(--tile)}
 .rescard h2{font-size:22px;margin:4px 0}
 .t.drag{background:var(--sand);color:#3a2b00}
 @media(prefers-reduced-motion:reduce){#app>*,.fb,#app .qcard.win,#app .qcard.shake,.opt.ok,.logo svg,.hero::after{animation:none}.burst{display:none}}
+
+/* Prénom facultatif (discret, en bas de l'accueil et de l'historique) */
+details.pf{margin:4px 2px 14px;font-size:14px;color:var(--mut)}
+details.pf>summary{cursor:pointer;min-height:44px;display:flex;align-items:center;text-decoration:underline;text-underline-offset:3px}
+details.pf .login{margin-top:6px}
+.pfline{font-size:14px;color:var(--mut);margin:4px 2px 14px}
+.linkbtn{background:none;border:0;color:var(--tile);text-decoration:underline;cursor:pointer;font-size:14px;padding:8px 2px;min-height:44px}

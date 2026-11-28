@@ -87,11 +87,11 @@ function done(q,res,user){
 function next(){qi++;qi<Q.length?show():finish()}
 function finish(){window.scrollTo(0,0);
  const n=Math.max(1,nAns);const pct=Math.round(score/n*100);
- if(nAns){if(ME){ME.hist.push({t:Date.now(),s:score,n:nAns,f:S.from,to:S.to,m:S.mode,d:S.diff});if(ME.hist.length>150)ME.hist=ME.hist.slice(-150)}persist()}
+ if(nAns){const P=CUR();P.hist.push({t:Date.now(),s:score,n:nAns,f:S.from,to:S.to,m:S.mode,d:S.diff});if(P.hist.length>150)P.hist=P.hist.slice(-150);persist()}
  const items=errs.map(e=>e.q.it);
  Q=[];
  const head=pct>=90?'Excellent, ma shā\' Allāh !':pct>=70?'Très bien !':pct>=50?'Pas mal, continue !':'Courage, ça va venir !';
- app.innerHTML=`<section class="card rescard"><svg class="ring" viewBox="0 0 120 120"><circle class="tr" cx="60" cy="60" r="52"/><circle class="pr" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="326.7"/><text x="60" y="70" text-anchor="middle" id="pc">0%</text></svg><h2>${head}</h2><p>${score} bonne${score>1?'s':''} réponse${score>1?'s':''} sur ${nAns}.${ME?` Enregistré dans l'historique de ${esc(ME.name)}.`:' Entre ton prénom sur l\'accueil pour garder un historique.'}</p>
+ app.innerHTML=`<section class="card rescard"><svg class="ring" viewBox="0 0 120 120"><circle class="tr" cx="60" cy="60" r="52"/><circle class="pr" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="326.7"/><text x="60" y="70" text-anchor="middle" id="pc">0%</text></svg><h2>${head}</h2><p>${score} bonne${score>1?'s':''} réponse${score>1?'s':''} sur ${nAns}. Enregistré dans ton historique.</p>
  <div class="actions"><button class="btn" id="again">Nouvelle série</button>${errs.length?'<button class="btn ghost" id="redo">Refaire mes erreurs</button>':''}</div></section>
  ${errs.length?`<section class="card"><h2>À revoir</h2>${errs.map(({q,user})=>`<div class="err"><span class="muted">${q.it.type==='g'?fmtPrompt(q.prompt):esc(q.ask)}</span>${q.it.type!=='g'?`<span class="${q.pAr?'ar':''}">${esc(q.pAr?showAr(q.prompt):q.prompt)}</span>`:''}<span class="${q.oAr?'ar':''}" style="color:var(--ok)">${esc(q.oAr?showAr(q.ans):q.ans)}</span>${user?`<span class="muted">Ta réponse : ${esc(user)}</span>`:''}</div>`).join('')}</section>`:''}`;
  $('#again').onclick=()=>{window.scrollTo(0,0);homeView()};

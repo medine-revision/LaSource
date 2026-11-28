@@ -13,11 +13,17 @@ const seg=(key,opts,cls='')=>`<div class="seg ${cls}" data-key="${key}">${opts.m
 const DIFF={mix:'Mélangé',easy:'Facile',medium:'Moyen',hard:'Difficile'};
 const MODE={mix:'Tout',words:'Mots',phrases:'Phrases',grammar:'Grammaire'};
 
+/* Prénom FACULTATIF et discret : utile seulement si plusieurs personnes partagent l'appareil. */
 function profileCard(){
- if(ME)return `<section class="card"><div class="who"><div class="av">${esc(ME.name[0].toUpperCase())}</div><div class="nm">${esc(ME.name)}<div class="muted">${ME.hist.length} série${ME.hist.length>1?'s':''} enregistrée${ME.hist.length>1?'s':''}${DB?' · synchronisé':' · sur cet appareil'}</div></div><button class="btn ghost" id="out">Changer</button></div></section>`;
- return `<section class="card"><h2>Qui révise ?</h2><form class="login" id="lf"><input type="text" id="nm" placeholder="Ton prénom" maxlength="40" autocomplete="nickname"><button class="btn">Entrer</button></form>
+ if(ME)return `<p class="pfline">Profil : <b>${esc(ME.name)}</b> · <button type="button" class="linkbtn" id="out">changer</button></p>`;
+ return `<details class="pf"><summary>Plusieurs personnes sur cet appareil ? Ajouter mon prénom</summary>
+ <form class="login" id="lf"><input type="text" id="nm" placeholder="Ton prénom" maxlength="40" autocomplete="nickname"><button class="btn">OK</button></form>
  ${KNOWN.length?`<div class="chips">${KNOWN.map(n=>`<button class="chip" type="button" data-n="${esc(n)}">${esc(n)}</button>`).join('')}</div>`:''}
- <p class="note">Pas de mot de passe : écris ton prénom pour retrouver ton historique. ${dbState==='wait'?'Connexion au stockage partagé…':DB?'Les résultats sont synchronisés entre tes appareils.':'Stockage partagé indisponible ici : les résultats restent sur cet appareil.'}</p></section>`;
+ <p class="note">Facultatif : chacun garde ses propres résultats sur cet appareil.</p></details>`;
+}
+function wireProfile(){
+ const lf=$('#lf');if(lf){lf.onsubmit=e=>{e.preventDefault();login($('#nm').value)};app.querySelectorAll('.chip').forEach(b=>b.onclick=()=>login(b.dataset.n))}
+ const o=$('#out');if(o)o.onclick=logout;
 }
 function heroCard(){
  const hr=new Date().getHours();const hi=hr<18?'Salam':'Bonsoir';
@@ -29,7 +35,7 @@ function homeView(){
  const P=pool();const c={w:0,p:0,g:0,f:0};P.forEach(i=>c[i.type]++);
  const genN=(S.mode==='mix'||S.mode==='grammar')?Math.max(20,c.g*2):0;
  const last=D.find(L=>L.n===S.to);
- app.innerHTML=heroCard()+profileCard()+`<section class="card">
+ app.innerHTML=heroCard()+`<section class="card">
  <h2>Jusqu'où as-tu étudié ?</h2>
  <div class="row"><div><div class="lbl">De la leçon</div><select id="from">${lessonOpts(S.from)}</select></div>
  <div><div class="lbl">Jusqu'à la leçon</div><select id="to">${lessonOpts(S.to)}</select></div></div>
@@ -45,9 +51,8 @@ function homeView(){
  <label class="sw"><input type="checkbox" id="har" ${S.har?'checked':''}> Afficher les voyelles (harakāt) — décoche pour plus de difficulté</label>
  <div class="counts"><span class="pill">${c.w} mots</span><span class="pill">${c.p} phrases</span><span class="pill">${c.g+genN} questions de grammaire${genN?' (dont '+genN+' générées à chaque série)':''}</span>${c.f?`<span class="pill">${c.f} pluriels / formes</span>`:''}</div>
  <button class="go" id="go" ${P.length?'':'disabled'}>Commencer</button>
- </section>`;
- const lf=$('#lf');if(lf){lf.onsubmit=e=>{e.preventDefault();login($('#nm').value)};app.querySelectorAll('.chip').forEach(b=>b.onclick=()=>login(b.dataset.n))}
- const o=$('#out');if(o)o.onclick=logout;
+ </section>`+profileCard();
+ wireProfile();
  app.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{S.to=+b.dataset.d;S.page=null;if(S.from>S.to)S.from=S.to;save();homeView()});
  $('#from').onchange=e=>{S.from=+e.target.value;S.page=null;if(S.to<S.from)S.to=S.from;save();homeView()};
  $('#to').onchange=e=>{S.to=+e.target.value;S.page=null;if(S.from>S.to)S.from=S.to;save();homeView()};
@@ -65,18 +70,17 @@ function homeView(){
  $('#go').onclick=()=>start(P);
 }
 function historyView(){
- if(!ME){app.innerHTML=profileCard()+`<p class="muted">Entre ton prénom pour voir ton historique.</p>`;const lf=$('#lf');if(lf){lf.onsubmit=e=>{e.preventDefault();login($('#nm').value)};app.querySelectorAll('.chip').forEach(b=>b.onclick=()=>login(b.dataset.n))}return}
- const H=ME.hist.slice().reverse();const st=ME.stats;let r=0,w=0;Object.values(st).forEach(s=>{r+=s.r;w+=s.w});
+ const P=CUR();const H=P.hist.slice().reverse();const st=P.stats;let r=0,w=0;Object.values(st).forEach(s=>{r+=s.r;w+=s.w});
  const avg=H.length?Math.round(H.slice(0,10).reduce((a,h)=>a+h.s/Math.max(1,h.n),0)/Math.min(10,H.length)*100):0;
  const hard=Object.entries(st).filter(([k,s])=>s.w>s.r).map(([k])=>ITEMS.find(i=>i.id===k)).filter(Boolean).slice(0,30);
  const fmt=t=>new Date(t).toLocaleDateString('fr-BE',{day:'2-digit',month:'2-digit'})+' '+new Date(t).toLocaleTimeString('fr-BE',{hour:'2-digit',minute:'2-digit'});
- app.innerHTML=profileCard()+`<section class="card"><h2>Résultats de ${esc(ME.name)}</h2>
+ app.innerHTML=`<section class="card"><h2>${ME?'Résultats de '+esc(ME.name):'Tes résultats'}</h2>
  <div class="big"><div><b>${H.length}</b><span>séries</span></div><div><b>${avg}%</b><span>moyenne des 10 dernières</span></div><div><b>${r}</b><span>bonnes réponses</span></div><div><b>${w}</b><span>erreurs</span></div></div>
  ${H.length?`<div class="hist">${H.slice(0,40).map(h=>{const p=Math.round(h.s/Math.max(1,h.n)*100);return `<div class="hr"><span class="d">${fmt(h.t)}</span><span class="b"><i style="width:${p}%"></i></span><span class="p">${p}%</span><span class="m">${h.s}/${h.n} · leçons ${h.f}–${h.to} · ${MODE[h.m]||''} · ${DIFF[h.d]||''}</span></div>`}).join('')}</div>`:'<p class="muted">Aucune série terminée pour l\'instant.</p>'}
  </section>
  ${hard.length?`<section class="card"><h2>À retravailler</h2><p class="muted" style="margin-top:0">Ces éléments reviennent plus souvent dans tes séries.</p>${hard.map(i=>i.type==='g'?`<div class="err"><span class="muted">${fmtPrompt(i.q)}</span><span class="${/[a-zé]/i.test(i.ok)?'':'ar'}">${esc(showAr(i.ok))}</span></div>`:`<div class="err"><span class="ar">${esc(showAr(i.type==='f'?i.base+' ← '+i.form:i.ar))}</span><span class="muted">${esc(i.fr)}</span></div>`).join('')}<div class="actions"><button class="btn" id="drill">Réviser ces éléments</button></div></section>`:''}
- <section class="card"><button class="btn ghost" id="wipe">Effacer mon historique</button></section>`;
- $('#out').onclick=logout;
+ <section class="card"><button class="btn ghost" id="wipe">Effacer mon historique</button></section>`+profileCard();
+ wireProfile();
  const dr=$('#drill');if(dr)dr.onclick=()=>{view='train';['train','hist','cours'].forEach(x=>$('#tab-'+x).setAttribute('aria-selected',x==='train'));start(null,shuf(hard).slice(0,S.count))};
- const wp=$('#wipe');wp.onclick=()=>{if(wp.dataset.c){ME.stats={};ME.hist=[];persist();history()}else{wp.dataset.c=1;wp.textContent='Confirmer : tout effacer'}};
+ const wp=$('#wipe');wp.onclick=()=>{if(wp.dataset.c){P.stats={};P.hist=[];persist();historyView()}else{wp.dataset.c=1;wp.textContent='Confirmer : tout effacer'}};
 }

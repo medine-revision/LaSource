@@ -34,7 +34,6 @@ async def main():
         pg.on('pageerror', lambda e: problems.append('Erreur JS : ' + str(e)))
         await pg.goto(URL); await pg.wait_for_timeout(700)
         await pg.evaluate('localStorage.clear()'); await pg.reload(); await pg.wait_for_timeout(700)
-        await pg.fill('#nm', 'Test'); await pg.click('#lf .btn'); await pg.wait_for_timeout(300)
         await pg.select_option('#to', '23')
         seen = []
         for diff in ['easy', 'medium', 'hard', 'mix']:
@@ -43,7 +42,7 @@ async def main():
             await pg.click('#go')
             for i in range(40):
                 if await pg.query_selector('.rescard'): break
-                seen.append(await pg.evaluate("JSON.parse(localStorage.getItem('m1recent:test')||'[]').slice(-1)[0]"))
+                seen.append(await pg.evaluate("JSON.parse(localStorage.getItem('m1recent:guest')||'[]').slice(-1)[0]"))
                 n = await pg.evaluate("document.querySelectorAll('.opt').length")
                 if n and n != 6: problems.append(f'QCM avec {n} choix')
                 await pg.wait_for_timeout(150)
@@ -61,6 +60,12 @@ async def main():
         if await pg.evaluate("document.querySelectorAll('.hr').length") < 4: problems.append('Historique incomplet')
         await pg.click('#tab-cours')
         if await pg.evaluate("document.querySelectorAll('details.les').length") != 23: problems.append('Cours : il ne montre pas 23 leçons')
+        # prénom facultatif : ouvrir le lien discret, entrer un prénom, l'historique invité est repris
+        await pg.click('#tab-train'); await pg.click('details.pf > summary')
+        await pg.fill('#nm', 'Test'); await pg.click('#lf .btn'); await pg.wait_for_timeout(300)
+        await pg.click('#tab-hist'); await pg.wait_for_timeout(200)
+        if await pg.evaluate("document.querySelectorAll('.hr').length") < 4: problems.append('Prénom : historique invité non repris')
+        await pg.click('#out'); await pg.wait_for_timeout(200)
         await pg.click('#theme'); await pg.click('#tab-train')
         await pg.click('#pp'); await pg.click('#pok')
         print(f'{len(seen)} questions jouées.')
