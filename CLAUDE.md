@@ -180,6 +180,7 @@ docs/CONTENU.md         Format exact des données + comment ajouter/corriger du 
 - Chrome : `/usr/bin/google-chrome` ; Playwright Python installé. Google Fonts est **bloqué** dans le sandbox → les captures utilisent une police de repli (normal).
 - Pas d'installation de paquets (réseau limité). `curl` vers github.io ne marche pas : on ne peut pas vérifier le site en ligne, seulement en local (`file://…/index.html`).
 - Git : `git -c push.negotiate=true push origin main`. Le remote doit être `https://github.com/medine-revision/LaSource`. Si refus 403 : l'app Claude n'a pas accès à l'organisation → demander à l'utilisateur.
+- Ne pas enchaîner `smoke_test.py | grep … && git push` : le `grep` masque l'échec du test. Lancer le test seul, lire « Tout est OK ✔ », puis pousser.
 - Dans les tests, une série se termine sur `.rescard` (anneau de score) — pas `.score`.
 
 ## 15. Glossaire

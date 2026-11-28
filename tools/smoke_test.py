@@ -67,7 +67,9 @@ async def main():
         if await pg.evaluate("document.querySelectorAll('.hr').length") < 4: problems.append('Prénom : historique invité non repris')
         await pg.click('#out'); await pg.wait_for_timeout(200)
         await pg.click('#theme'); await pg.click('#tab-train')
+        await pg.click('.seg[data-key=pick] button[data-v=page]')
         await pg.click('#pp'); await pg.click('#pok')
+        await pg.click('.seg[data-key=pick] button[data-v=lesson]')
         print(f'{len(seen)} questions jouées.')
         await b.close()
     if problems:
