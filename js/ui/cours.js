@@ -14,6 +14,11 @@ function lessonBody(L,openGram){
   ${ph.length?`<details class="sec"><summary>3. Phrases d'exemple <small>${ph.length} phrases</small><span class="c">${CH}</span></summary><div class="in"><table class="v">${ph.map(w=>`<tr><td>${esc(w.fr)}</td><td class="ar" data-say="${esc(stripH(w.ar))}">${esc((w.ar))}</td></tr>`).join('')}</table></div></details>`:''}`;
 }
 /* Page du livre (version arabe) → leçon qui la contient, avec ses pages de début et de fin. */
+/* Lien vers le livre (PDF) hébergé par La Source, accès réservé aux élèves (ex. Google Drive partagé).
+   Vide = bouton caché. Page PDF = page imprimée − 4 (le scan commence à la page 5 du livre). */
+const BOOK_URL='';
+const BOOK_OFFSET=4;
+const bookLink=L=>BOOK_URL?`<a class="btn ghost bookbtn" href="${esc(BOOK_URL+(/drive\.google|docs\.google/.test(BOOK_URL)?'':'#page='+(L.p-BOOK_OFFSET)))}" target="_blank" rel="noopener">Ouvrir le livre (pages ${L.p}–${pageEnd(L)})</a>`:'';
 const pageEnd=L=>{const nx=D.find(x=>x.n===L.n+1);return nx?nx.p-1:124};
 const lessonOfPage=p=>{let L=D[0];D.forEach(x=>{if(x.p<=p)L=x});return L};
 function cours(){
@@ -25,6 +30,7 @@ function cours(){
   const nw=ITEMS.filter(i=>i.L===L.n&&i.type==='w').length;const mine=L.n>=S.from&&L.n<=S.to;
   return `<details class="les${mine?' mine':''}" id="les-${L.n}"><summary><span class="num">${L.n}</span><span><b>${fmtPrompt(L.t)}</b><br><span class="muted">Pages ${L.p}–${pageEnd(L)} · ${nw} mots · ${L.g.length} règle${L.g.length>1?'s':''}</span></span><span class="c">${CH}</span></summary><div class="body">
   ${lessonBody(L,false)}
+  ${bookLink(L)}
   <button class="btn lesgo" type="button" data-les="${L.n}">S'entraîner sur cette leçon</button>
   </div></details>`}).join('');
  app.querySelectorAll('[data-les]').forEach(b=>b.onclick=()=>{const n=+b.dataset.les;S.from=n;S.to=n;S.page=null;save();tab('train')});

@@ -132,7 +132,7 @@ docs/CONTENU.md         Format exact des données + comment ajouter/corriger du 
 - Questions générées : elles doivent avoir du **sens** (l'utilisateur a signalé « vers le sac »). Règles en place : `PREPS` (في = lieu/véhicule/contenant, عَلىٰ = surface, مِنْ = lieu, إِلىٰ = lieu/personne), `idafaOk` (`PARTS` : partie → tout, ex. porte → mosquée ; sinon objet/animal → personne), catégories `nature`, `cont`, `surf`, `skip`, `FAMILY` (pas de « deux mères »). Toute nouvelle catégorie de mot doit être rangée dans `CAT`. Vérifier un échantillon (`__gen`) après chaque changement.
 
 ## 10. Idées possibles (non faites)
-- **Ne pas** mettre les pages scannées du livre en ligne (droits d'auteur) : le site montre son propre contenu par leçon. Idée discutée avec l'utilisateur : bouton « Voir le PDF » par leçon → seulement avec l'accord écrit de l'éditeur ou en lien vers une source officielle.
+- **Ne pas** mettre le PDF du livre dans le dépôt public (droits d'auteur). À la place : `BOOK_URL` (en haut de `js/ui/cours.js`) = lien vers le PDF hébergé par La Source avec accès réservé (ex. Google Drive partagé aux élèves). Si rempli, chaque leçon du Cours affiche « Ouvrir le livre (pages X–Y) » (`#page=` = page imprimée − 4 pour un lien PDF direct ; pas d'ancre pour Google Drive).
 - Choix « version française » pour les numéros de page (nécessite la page de début de chaque leçon dans l'édition FR).
 - Tome 2 : même format de données (voir docs/CONTENU.md §7).
 - Suivi de classe pour le professeur (nécessiterait une base de données en ligne, ex. Supabase/Firebase).
